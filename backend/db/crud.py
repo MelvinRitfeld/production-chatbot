@@ -141,3 +141,5 @@ def save_feedback(
         db.rollback()
         raise
     finally:
+         db.close()
+         
