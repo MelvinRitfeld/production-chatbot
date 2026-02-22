@@ -1,8 +1,16 @@
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+class Settings:
+	def __init__(self) -> None:
+		self.environment = os.getenv("ENVIRONMENT", "local")
+
+		origins = os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:3000")
+		self.cors_allow_origins = [o.strip() for o in origins.split(",") if o.strip()]
+
+		self.database_url = os.getenv("DATABASE_URL", "")
+
+		self.log_level = os.getenv("LOG_LEVEL", "INFO")
+
+
+settings = Settings()

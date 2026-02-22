@@ -1,30 +1,22 @@
 from fastapi import FastAPI
-from sqlalchemy import text
-from db.session import SessionLocal
-from app.llm.llm_service import LLMService
+from fastapi.middleware.cors import CORSMiddleware
 
+from app.config import settings
+from app.logging_middleware import LoggingMiddleware
+from app.routers import chat, admin, health
 
 app = FastAPI(title="Production Chatbot API")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_allow_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+app.add_middleware(LoggingMiddleware)
 
-
-@app.get("/db-health")
-def db_health():
-    with SessionLocal() as session:
-        session.execute(text("SELECT 1"))
-    return {"db": "ok"}
-
-@app.post("/chat-test")
-def chat_test(payload: dict):
-    user_message = payload.get("message", "")
-    style = payload.get("style", "instruction")
-
-    llm = LLMService()
-    result = llm.generate(user_message, style=style)
-
-    return {"reply": result.reply}
-
+app.include_router(health.router)
+app.include_router(chat.router)
+app.include_router(admin.router)
