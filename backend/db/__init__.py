@@ -1,0 +1,1 @@
+# makes "db" a package so "python -m db.smoke_test" works
