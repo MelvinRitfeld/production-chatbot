@@ -7,6 +7,7 @@ from app.llm.llm_service import LLMService
 from app.security.injection import check_prompt_injection
 from app.security.fallbacks import safe_fallback_response
 
+
 app = FastAPI(title="Production Chatbot API")
 
 llm = LLMService()
@@ -40,6 +41,7 @@ def chat_test(payload: ChatTestIn):
     style = payload.style or "instruction"
 
     check = check_prompt_injection(user_message)
+
     if check.is_suspicious:
         return {
             "reply": safe_fallback_response(),
@@ -49,6 +51,7 @@ def chat_test(payload: ChatTestIn):
         }
 
     result = llm.generate(user_message, style=style)
+
     return {
         "reply": result.reply,
         "blocked": False,
