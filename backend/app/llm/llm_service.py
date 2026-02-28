@@ -16,8 +16,7 @@ class LLMService:
         if style == "few_shot":
             prompt = few_shot_prompt(user_message)
         else:
-            # default to instruction (never raw)
             prompt = instruction_prompt(user_message)
 
-        reply = f"(stub using {style})\n\nSYSTEM:\n{SYSTEM_PROMPT}\n\nPROMPT:\n{prompt}"
+        reply = f"Placeholder reply"
         return LLMResult(reply=reply)
