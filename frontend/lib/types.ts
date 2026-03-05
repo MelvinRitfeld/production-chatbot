@@ -21,6 +21,22 @@ export type ChatResponse = {
 
 export type MetricsResponse = {
   total_conversations: number;
+  total_messages: number;
   avg_latency_ms: number;
   error_count: number;
+  success_rate: number; // 0.0 - 1.0
+};
+
+
+export type RecentRequestLog = {
+  id: string;
+  endpoint: string;
+  status_code: number;
+  latency_ms: number;
+  error_message: string | null;
+  created_at: string | null;
+};
+
+export type RecentLogsResponse = {
+  logs: RecentRequestLog[];
 };

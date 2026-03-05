@@ -48,8 +48,8 @@ def get_conversation(conversation_id: uuid.UUID) -> Dict[str, Any]:
     """
     Returns:
     {
-      "conversation": {...} | None,
-      "messages": [...]
+        "conversation": {...} | None,
+        "messages": [...]
     }
     """
     db: Session = SessionLocal()
@@ -91,6 +91,10 @@ def save_request_log(
     status_code: int,
     latency_ms: int,
     error_message: Optional[str],
+    source: Optional[str] = None,          # ✅ NEW
+    faq_match_id: Optional[str] = None,    # ✅ NEW
+    faq_score: Optional[int] = None,       # ✅ NEW
+    user_input: Optional[str] = None,      # ✅ NEW
 ) -> None:
     db: Session = SessionLocal()
     try:
@@ -100,6 +104,10 @@ def save_request_log(
             status_code=status_code,
             latency_ms=latency_ms,
             error_message=error_message,
+            source=source,
+            faq_match_id=faq_match_id,
+            faq_score=faq_score,
+            user_input=user_input,
         )
         db.add(log)
         db.commit()
@@ -111,17 +119,10 @@ def save_request_log(
 
 
 def get_metrics() -> Dict[str, Any]:
-    """
-    Returns:
-    {
-      "total_conversations": int,
-      "avg_latency_ms": float,
-      "error_count": int
-    }
-    """
     db: Session = SessionLocal()
     try:
         total_conversations = db.scalar(select(func.count(Conversation.id))) or 0
+        total_messages = db.scalar(select(func.count(Message.id))) or 0
 
         avg_latency = db.scalar(select(func.avg(RequestLog.latency_ms)))
         avg_latency_ms = float(avg_latency) if avg_latency is not None else 0.0
@@ -131,14 +132,83 @@ def get_metrics() -> Dict[str, Any]:
             or 0
         )
 
+        # ✅ only chat requests count for match rate
+        total_chat_requests = (
+            db.scalar(select(func.count(RequestLog.id)).where(RequestLog.endpoint == "/api/chat"))
+            or 0
+        )
+
+        faq_matches = (
+            db.scalar(
+                select(func.count(RequestLog.id)).where(
+                    (RequestLog.endpoint == "/api/chat") & (RequestLog.source == "faq")
+                )
+            )
+            or 0
+        )
+
+        unmatched = (
+            db.scalar(
+                select(func.count(RequestLog.id)).where(
+                    (RequestLog.endpoint == "/api/chat") & (RequestLog.source == "stub")
+                )
+            )
+            or 0
+        )
+
+        match_rate = (faq_matches / total_chat_requests) if total_chat_requests > 0 else 0.0
+
+        success_rate = 1.0 - (
+            error_count / (db.scalar(select(func.count(RequestLog.id))) or 1)
+        )
+
         return {
             "total_conversations": int(total_conversations),
+            "total_messages": int(total_messages),
             "avg_latency_ms": avg_latency_ms,
             "error_count": int(error_count),
+            "success_rate": float(success_rate),
+            # ✅ NEW
+            "total_chat_requests": int(total_chat_requests),
+            "faq_matches": int(faq_matches),
+            "unmatched": int(unmatched),
+            "match_rate": float(match_rate),
         }
     finally:
         db.close()
 
+
+
+def get_unmatched_questions(limit: int = 20) -> Dict[str, Any]:
+    db: Session = SessionLocal()
+    try:
+        stmt = (
+            select(RequestLog)
+            .where(
+                (RequestLog.endpoint == "/api/chat") &
+                (RequestLog.source == "stub")
+            )
+            .order_by(RequestLog.created_at.desc())
+            .limit(limit)
+        )
+
+        rows = db.execute(stmt).scalars().all()
+
+        return {
+            "count": len(rows),
+            "items": [
+                {
+                    "id": str(r.id),
+                    "created_at": r.created_at,
+                    "user_input": r.user_input,
+                    "status_code": r.status_code,
+                }
+                for r in rows
+            ],
+        }
+    finally:
+        db.close()
+        
 
 def save_feedback(
     conversation_id: uuid.UUID,
@@ -159,5 +229,32 @@ def save_feedback(
     except Exception:
         db.rollback()
         raise
+    finally:
+        db.close()
+
+        
+
+
+def get_recent_request_logs(limit: int = 20):
+    db: Session = SessionLocal()
+    try:
+        stmt = (
+            select(RequestLog)
+            .order_by(RequestLog.created_at.desc())
+            .limit(limit)
+        )
+        logs = db.execute(stmt).scalars().all()
+
+        return [
+            {
+                "id": str(l.id),
+                "endpoint": l.endpoint,
+                "status_code": l.status_code,
+                "latency_ms": l.latency_ms,
+                "error_message": l.error_message,
+                "created_at": l.created_at.isoformat() if l.created_at else None,
+            }
+            for l in logs
+        ]
     finally:
         db.close()
