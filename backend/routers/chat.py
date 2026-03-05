@@ -2,12 +2,11 @@ import time
 from fastapi import APIRouter
 
 from models.chat import ChatRequest, ChatResponse
-from app.llm.llm_service import LLMService
+from app.services.faq_service import FAQService
 from db import crud
 
 router = APIRouter()
-llm = LLMService()
-
+faq = FAQService()
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(payload: ChatRequest):
@@ -24,9 +23,8 @@ def chat(payload: ChatRequest):
         content=payload.message,
     )
 
-    # Generate LLM reply (stub for now)
-    result = llm.generate(payload.message)
-    reply_text = result.reply
+    # Get answer (FAQ first, then LLM fallback)
+    reply_text, source = faq.get_answer(payload.message)
 
     # Save assistant message
     crud.save_message(
