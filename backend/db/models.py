@@ -11,6 +11,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
+
 
 from .session import Base
 
@@ -71,6 +74,8 @@ class RequestLog(Base):
     __tablename__ = "request_logs"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    conversation_id = Column(UUID(as_uuid=True), ForeignKey("conversations.id"), nullable=True)
+
 
     conversation_id = Column(
         UUID(as_uuid=True),
@@ -78,12 +83,16 @@ class RequestLog(Base):
         nullable=True,
     )
 
-    endpoint = Column(Text, nullable=False)
+    endpoint = Column(String, nullable=False)
     status_code = Column(Integer, nullable=False)
     latency_ms = Column(Integer, nullable=False)
     error_message = Column(Text, nullable=True)
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
+    source = Column(String, nullable=True)          # "faq" or "stub"
+    faq_match_id = Column(String, nullable=True)    # e.g. "buku_kosten"
+    faq_score = Column(Integer, nullable=True)      # your overlap score
+    user_input = Column(Text, nullable=True)        # the actual user question
 
 # =========================
 # D) feedback

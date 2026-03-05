@@ -1,4 +1,4 @@
-import type { ChatRequest, ChatResponse, MetricsResponse } from "./types";
+import type { ChatRequest, ChatResponse, MetricsResponse, RecentLogsResponse } from "./types";
 
 const RAW_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -39,6 +39,22 @@ export async function getMetrics(): Promise<MetricsResponse> {
 
   if (!res.ok) {
     throw new Error(`Metrics failed (${res.status}): ${await readError(res)}`);
+  }
+
+  return res.json();
+}
+
+
+
+export async function getRecentLogs(): Promise<RecentLogsResponse> {
+  const res = await fetch(`${API_BASE}/api/admin/recent`, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Recent logs failed (${res.status}): ${await readError(res)}`);
   }
 
   return res.json();

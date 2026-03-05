@@ -1,6 +1,7 @@
 services:
-  postgres:
+  db:
     image: postgres:16
+    container_name: production-chatbot-db
     environment:
       POSTGRES_DB: app
       POSTGRES_USER: app
@@ -8,7 +9,37 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: production-chatbot-backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://app:app@db:5432/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: production-chatbot-frontend
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 
 volumes:
-  pgdata:
+  db_data:
