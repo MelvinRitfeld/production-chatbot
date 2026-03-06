@@ -6,6 +6,8 @@ from routers.health import router as health_router
 from routers.chat import router as chat_router
 from routers.admin import router as admin_router
 from db.session import init_db
+from app.security.rate_limiter import rate_limit_middleware
+
 
 app = FastAPI(title="Production Chatbot API")
 
@@ -32,3 +34,6 @@ app.include_router(chat_router, prefix="/api", tags=["chat"])
 # admin_router ALREADY has prefix="/api/admin" inside routers/admin.py
 # so DO NOT add prefix again here
 app.include_router(admin_router)
+
+# Add rate limiting middleware to the app
+app.middleware("http")(rate_limit_middleware)
