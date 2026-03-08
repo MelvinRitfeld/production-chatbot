@@ -1,120 +1,158 @@
 # UNASAT Campus Support Chatbot
 
-Een productieklare AI-chatbot voor studenten van UNASAT (Universiteit van Suriname).  
-De chatbot beantwoordt vragen over inschrijving, roosters, Microsoft Teams, kosten en algemene campusinformatie.
+A production-ready AI chatbot for UNASAT (Universiteit van Suriname) students. Answers questions about enrollment, schedules, Microsoft Teams, exams and general campus information — instantly via FAQ matching or intelligently via LLM fallback.
+
+---
+
+## Features
+
+- **Hybrid FAQ + AI** — known questions answered in <10ms, unknown questions via Groq LLM (~500ms)
+- **Source indicators** — every response shows whether it came from FAQ or AI
+- **Conversation memory** — the AI remembers context from earlier in the conversation
+- **Multi-language** — detects and responds in Dutch, English or Sranantongo
+- **FAQ suggestions** — AI responses show related FAQ questions ("Misschien bedoel je...?")
+- **Feedback buttons** — 👍👎 on every bot message, stored in PostgreSQL
+- **Security** — prompt injection detection, PII redaction, rate limiting (20 req/60s)
+- **Admin dashboard** — live metrics, latency, success rate at `/admin`
+- **Logging** — all conversations and requests logged to PostgreSQL
+
+---
 
 ## Tech Stack
 
-| Laag | Technologie |
+| Layer | Technology |
 |---|---|
-| Frontend | Next.js (React) — poort 3000 |
-| Backend | FastAPI (Python) — poort 8000 |
+| Frontend | Next.js (React) — port 3000 |
+| Backend | FastAPI (Python) — port 8000 |
 | Database | PostgreSQL 16 |
-| LLM | Groq API (llama-3.3-70b-versatile) |
-| Containerisatie | Docker & Docker Compose |
+| LLM | Groq API — llama-3.3-70b-versatile |
+| Deployment | Docker Compose |
 
-## Vereisten
-
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) geïnstalleerd en actief
-- Git
+---
 
 ## Quickstart
 
-### 1. Clone de repository
+### Option 1 — Automated setup (recommended)
 
-```bash
-git clone https://github.com/MelvinRitfeld/production-chatbot.git
+**Windows:**
+```powershell
+git clone https://github.com/MelvinRitfeld/production-chatbot
 cd production-chatbot
-git checkout melvin-backup
+powershell -ExecutionPolicy Bypass -File setup.ps1
 ```
 
-### 2. Maak het `.env` bestand aan
+**Linux / Mac:**
+```bash
+git clone https://github.com/MelvinRitfeld/production-chatbot
+cd production-chatbot
+chmod +x setup.sh && ./setup.sh
+```
+
+The script will check Docker, create your `.env`, ask for your API key and start everything automatically.
+
+### Option 2 — Manual setup
 
 ```bash
+git clone https://github.com/MelvinRitfeld/production-chatbot
+cd production-chatbot
+
+# Create and fill in your environment file
 cp backend/.env.example backend/.env
-```
+# Open backend/.env and set GROQ_API_KEY
 
-Open `backend/.env` en vul de waarden in:
-
-```env
-DATABASE_URL=postgresql+psycopg2://app:app@db:5432/app
-GROQ_API_KEY=jouw_groq_api_key_hier
-```
-
-> Een gratis Groq API key is aan te maken op [console.groq.com](https://console.groq.com)
-
-### 3. Start de applicatie
-
-```bash
+# Build and start
 docker compose up --build
 ```
 
-De eerste keer duurt dit ~5 minuten. Daarna is de chatbot beschikbaar op:
+Get a free Groq API key at: https://console.groq.com
 
-| Service | URL |
+---
+
+## Access
+
+| URL | Description |
 |---|---|
-| Chatbot (frontend) | http://localhost:3000 |
-| Admin dashboard | http://localhost:3000/admin |
-| Backend API | http://localhost:8000 |
-| API docs | http://localhost:8000/docs |
+| http://localhost:3000 | Chatbot interface |
+| http://localhost:3000/admin | Admin dashboard |
+| http://localhost:8000/docs | Backend API docs |
+| http://localhost:8000/health | Health check |
 
-## Hoe werkt het?
+---
 
-1. Student stuurt een bericht via de frontend
-2. Backend controleert eerst de FAQ-database (token scoring, drempel = 4)
-3. **FAQ match** → direct antwoord (~10ms)
-4. **Geen match** → Groq LLM met UNASAT systeemprompt (~500ms)
-5. Alles wordt gelogd in PostgreSQL (gesprekken, berichten, latency)
-
-## Projectstructuur
+## Project Structure
 
 ```
 production-chatbot/
+├── setup.ps1                  # Automated setup (Windows)
+├── setup.sh                   # Automated setup (Linux/Mac)
 ├── docker-compose.yml
 ├── backend/
-│   ├── main.py                      # FastAPI applicatie
-│   ├── .env                         # Secrets (niet in git)
-│   ├── .env.example                 # Template voor .env
+│   ├── main.py                # FastAPI app entrypoint
+│   ├── .env.example           # Environment template
 │   ├── requirements.txt
-│   ├── Dockerfile
 │   ├── app/
-│   │   ├── services/faq_service.py  # FAQ matching + LLM fallback
-│   │   └── data/answer_bank.py      # FAQ kennisbank
-│   ├── db/
-│   │   ├── session.py               # Database verbinding
-│   │   ├── crud.py
-│   │   └── models.py
-│   └── routers/
-│       ├── chat.py
-│       ├── health.py
-│       └── admin.py
+│   │   ├── services/
+│   │   │   └── faq_service.py # FAQ matching + LLM fallback + suggestions
+│   │   ├── security/
+│   │   │   ├── injection.py   # Prompt injection + PII detection
+│   │   │   ├── fallbacks.py   # Safe Dutch fallback messages
+│   │   │   └── rate_limiter.py # 20 req/60s per IP
+│   │   └── data/
+│   │       └── answer_bank.py # FAQ knowledge base (50+ entries)
+│   ├── routers/
+│   │   ├── chat.py            # POST /api/chat
+│   │   ├── feedback.py        # POST /api/feedback
+│   │   ├── admin.py           # GET /api/admin/metrics
+│   │   └── health.py          # GET /health
+│   └── db/
+│       ├── models.py          # SQLAlchemy models
+│       ├── crud.py            # Database operations
+│       └── session.py         # DB connection
 └── frontend/
-    ├── Dockerfile
-    └── app/                         # Next.js pagina's
+    ├── app/
+    │   ├── page.tsx           # Main chat interface
+    │   └── layout.tsx
+    └── lib/
+        ├── api.ts             # API client
+        └── types.ts           # TypeScript types
 ```
 
-## Stoppen
+---
+
+## Security
+
+| Feature | Implementation |
+|---|---|
+| Prompt injection | Pattern-based detection, 9 attack patterns, blocked with Dutch fallback |
+| PII redaction | Email, phone, ID detection — stored as `[PII_REDACTED]` in DB |
+| Rate limiting | 20 requests per 60 seconds per IP, 2 minute block on exceed |
+| Input validation | Empty input check, max token limits |
+| API key safety | Loaded from `.env`, never committed to git |
+
+---
+
+## Stopping the chatbot
 
 ```bash
+# Stop containers
 docker compose down
-```
 
-Om ook de database data te verwijderen:
-
-```bash
+# Stop and delete all data
 docker compose down -v
 ```
 
+---
+
 ## Troubleshooting
 
-**Backend start niet op**  
-Controleer of `backend/.env` bestaat en `DATABASE_URL` de hostnaam `db` bevat (niet `localhost`).
+**Backend won't start**
+Check that `backend/.env` exists and `GROQ_API_KEY` is set correctly.
 
-**Poort al in gebruik**  
-Zorg dat poorten 3000, 8000 en 5432 vrij zijn voordat je start.
+**Database connection error**
+Make sure `DATABASE_URL` in `backend/.env` uses `@db:5432` not `@localhost:5432`.
 
-**Docker build duurt lang**  
-Normaal bij de eerste build. Daarna zijn layers gecached en gaat het sneller.
+**Port already in use**
+Stop other services on ports 3000, 8000 or 5432, then retry.
 
-**Groq API geeft een fout**  
-Controleer of de `GROQ_API_KEY` in `backend/.env` geldig is via [console.groq.com](https://console.groq.com).
+**LLM answers are in English**
+The system prompt instructs the model to match the student's language. If it switches, try rephrasing in Dutch.
