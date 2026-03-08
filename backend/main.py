@@ -6,6 +6,7 @@ from routers.health import router as health_router
 from routers.chat import router as chat_router
 from routers.admin import router as admin_router
 from db.session import init_db
+from routers.feedback import router as feedback_router
 from app.security.rate_limiter import rate_limit_middleware
 
 
@@ -37,3 +38,6 @@ app.include_router(admin_router)
 
 # Add rate limiting middleware to the app
 app.middleware("http")(rate_limit_middleware)
+
+
+app.include_router(feedback_router, prefix="/api", tags=["feedback"])

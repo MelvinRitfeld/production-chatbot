@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { chat } from "@/lib/api";
 import type { ChatMessage } from "@/lib/types";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+
 function makeId() {
   return crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
 }
@@ -15,6 +17,26 @@ const SUGGESTED = [
   "Wanneer zijn de tentamens?",
 ];
 
+// ── Source badge ─────────────────────────────────────────────
+function SourceBadge({ source }: { source?: string }) {
+  if (!source || source === "error") return null;
+  if (source === "faq") {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-full px-2 py-0.5">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+        FAQ
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 text-xs text-violet-400 bg-violet-400/10 border border-violet-400/20 rounded-full px-2 py-0.5">
+      <span className="w-1.5 h-1.5 rounded-full bg-violet-400 inline-block" />
+      AI
+    </span>
+  );
+}
+
+// ── Typing indicator ─────────────────────────────────────────
 function TypingIndicator() {
   return (
     <div className="flex items-end gap-3 mb-4">
@@ -32,7 +54,79 @@ function TypingIndicator() {
   );
 }
 
-function MessageBubble({ msg }: { msg: ChatMessage }) {
+// ── Feedback buttons ─────────────────────────────────────────
+function FeedbackButtons({
+  conversationId,
+  messageId,
+}: {
+  conversationId: string | null;
+  messageId: string;
+}) {
+  const [voted, setVoted] = useState<"up" | "down" | null>(null);
+
+  async function submitFeedback(rating: number) {
+    if (voted || !conversationId) return;
+    setVoted(rating === 1 ? "up" : "down");
+    try {
+      await fetch(`${API_BASE}/api/feedback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversation_id: conversationId,
+          message_id: messageId,
+          rating,
+        }),
+      });
+    } catch {
+      // silent fail — feedback is non-critical
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-1 mt-1">
+      <button
+        onClick={() => submitFeedback(1)}
+        disabled={voted !== null}
+        className={`text-xs px-1.5 py-0.5 rounded transition-all ${
+          voted === "up"
+            ? "text-emerald-400"
+            : "text-zinc-600 hover:text-zinc-400"
+        }`}
+        title="Nuttig"
+      >
+        👍
+      </button>
+      <button
+        onClick={() => submitFeedback(-1)}
+        disabled={voted !== null}
+        className={`text-xs px-1.5 py-0.5 rounded transition-all ${
+          voted === "down"
+            ? "text-red-400"
+            : "text-zinc-600 hover:text-zinc-400"
+        }`}
+        title="Niet nuttig"
+      >
+        👎
+      </button>
+      {voted && (
+        <span className="text-xs text-zinc-600 ml-1">
+          {voted === "up" ? "Bedankt!" : "Bedankt voor je feedback."}
+        </span>
+      )}
+    </div>
+  );
+}
+
+// ── Message bubble ────────────────────────────────────────────
+function MessageBubble({
+  msg,
+  conversationId,
+  onSuggestionClick,
+}: {
+  msg: ChatMessage;
+  conversationId: string | null;
+  onSuggestionClick: (q: string) => void;
+}) {
   const isUser = msg.role === "user";
   const time = new Date(msg.timestamp).toLocaleTimeString("nl-SR", {
     hour: "2-digit",
@@ -61,17 +155,40 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
         <div className="bg-zinc-800 border border-zinc-700/60 text-zinc-100 rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed shadow">
           {msg.content}
         </div>
-        <div className="flex items-center gap-2 mt-1">
+
+        {/* Meta row: time, latency, source badge, feedback */}
+        <div className="flex items-center gap-2 mt-1.5 flex-wrap">
           <p className="text-xs text-zinc-500">{time}</p>
-          {(msg as any).latency_ms && (
-            <p className="text-xs text-zinc-600">{(msg as any).latency_ms}ms</p>
+          {msg.latency_ms && (
+            <p className="text-xs text-zinc-600">{msg.latency_ms}ms</p>
           )}
+          <SourceBadge source={msg.source} />
+          <FeedbackButtons conversationId={conversationId} messageId={msg.id} />
         </div>
+
+        {/* FAQ suggestions for LLM responses */}
+        {msg.source === "llm" && msg.suggestions && msg.suggestions.length > 0 && (
+          <div className="mt-3">
+            <p className="text-xs text-zinc-500 mb-2">Misschien bedoel je...?</p>
+            <div className="flex flex-col gap-1.5">
+              {msg.suggestions.map((q) => (
+                <button
+                  key={q}
+                  onClick={() => onSuggestionClick(q)}
+                  className="text-left text-xs text-zinc-300 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-600/50 rounded-xl px-3 py-2 transition-all"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
+// ── Main page ─────────────────────────────────────────────────
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -115,7 +232,9 @@ export default function Home() {
         content: res.reply,
         timestamp: Date.now(),
         latency_ms: res.latency_ms,
-      } as any;
+        source: res.source,
+        suggestions: res.suggestions ?? [],
+      };
       setMessages((prev) => [...prev, botMsg]);
     } catch (e: any) {
       setError(e?.message ?? "Chat request failed");
@@ -163,11 +282,18 @@ export default function Home() {
               <p className="text-xs text-emerald-500 mt-0.5">● Online</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <a
-              href="/admin"
-              className="text-xs text-zinc-400 hover:text-white transition-colors"
-            >
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-3 text-xs text-zinc-500">
+              <span className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                FAQ
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-violet-400 inline-block" />
+                AI
+              </span>
+            </div>
+            <a href="/admin" className="text-xs text-zinc-400 hover:text-white transition-colors">
               Admin
             </a>
             <button
@@ -185,7 +311,12 @@ export default function Home() {
       <section className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-3xl mx-auto">
           {messages.map((msg) => (
-            <MessageBubble key={msg.id} msg={msg} />
+            <MessageBubble
+              key={msg.id}
+              msg={msg}
+              conversationId={conversationId}
+              onSuggestionClick={handleSend}
+            />
           ))}
 
           {isSending && <TypingIndicator />}
@@ -196,7 +327,7 @@ export default function Home() {
             </div>
           )}
 
-          {/* Suggested questions */}
+          {/* Initial suggested questions */}
           {showSuggestions && !isSending && (
             <div className="mt-6">
               <p className="text-xs text-zinc-500 mb-3 uppercase tracking-wider">Veelgestelde vragen</p>

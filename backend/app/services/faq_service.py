@@ -6,20 +6,21 @@ from app.data.answer_bank import FAQ_ENTRIES
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-SYSTEM_PROMPT = """Je bent een behulpzame studentenassistent van UNASAT (Universiteit van Suriname). 
-Je helpt studenten met vragen over inschrijving, roosters, toetsen, studiebegeleiding, 
+SYSTEM_PROMPT = """Je bent een behulpzame studentenassistent van UNASAT (Universiteit van Suriname).
+Je helpt studenten met vragen over inschrijving, roosters, toetsen, studiebegeleiding,
 Microsoft Teams, OneDrive, SHL en algemene campusinformatie.
 
 Regels:
-- Antwoord altijd in het Nederlands
+- Detecteer de taal van de student en antwoord in diezelfde taal (Nederlands, Engels of Sranantongo)
 - Wees kort en duidelijk (max 3 zinnen)
 - Als je het antwoord niet zeker weet, verwijs naar info@unasat.sr
 - Verzin geen informatie over specifieke data, bedragen of namen
-- Blijf altijd vriendelijk en professioneel"""
+- Blijf altijd vriendelijk en professioneel
+- Gebruik de gespreksgeschiedenis om context te begrijpen"""
 
 
 class FAQService:
-    def __init__(self) -> None:
+    def __init__(self):
         self.entries = FAQ_ENTRIES
 
         self.stopwords = {
@@ -85,28 +86,62 @@ class FAQService:
 
         return None, 0
 
-    # 5) LLM fallback via Groq
-    def llm_fallback(self, user_input: str) -> str:
+    # 5) Get low-confidence FAQ suggestions (for LLM fallback responses)
+    def get_suggestions(self, user_input: str, limit: int = 3) -> List[str]:
+        """Returns up to `limit` related FAQ questions with score >= 2 (below main threshold)."""
+        normalized_input = self._normalize(user_input)
+        user_tokens = self._tokenize(normalized_input)
+
+        if len(user_tokens) == 0:
+            return []
+
+        scored = []
+        for entry in self.entries:
+            q_norm = self._normalize(entry.get("question", ""))
+            q_tokens = self._tokenize(q_norm)
+            overlap = len(user_tokens & q_tokens)
+            if overlap == 0:
+                continue
+            score = self._score(user_tokens, q_tokens, entry.get("tags", []))
+            if 2 <= score < 4:
+                scored.append((score, entry.get("question", "")))
+
+        scored.sort(key=lambda x: x[0], reverse=True)
+        return [q for _, q in scored[:limit]]
+
+    # 6) LLM fallback via Groq with conversation history
+    def llm_fallback(self, user_input: str, history: list = None) -> str:
         try:
+            messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+
+            if history:
+                for msg in history[:-1]:
+                    role = msg.get("role", "user")
+                    content = msg.get("content", "")
+                    if content.startswith("[BLOCKED") or content == "[PII_REDACTED]":
+                        continue
+                    if role in ("user", "assistant"):
+                        messages.append({"role": role, "content": content})
+
+            messages.append({"role": "user", "content": user_input})
+
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": user_input}
-                ],
+                messages=messages,
                 max_tokens=200,
                 temperature=0.5,
             )
             return response.choices[0].message.content.strip()
-        except Exception as e:
+        except Exception:
             return "Ik kan je vraag momenteel niet beantwoorden. Neem contact op via info@unasat.sr."
 
-    # 6) Main entry point
-    def get_answer(self, user_input: str) -> Tuple[str, str]:
-        """Returns (answer, source) where source is 'faq' or 'llm'"""
+    # 7) Main entry point
+    def get_answer(self, user_input: str, history: list = None) -> Tuple[str, str, List[str]]:
+        """Returns (answer, source, suggestions)"""
         match, score = self.find_best_match(user_input)
         if match:
-            return match["answer"], "faq"
-        
-        llm_answer = self.llm_fallback(user_input)
-        return llm_answer, "llm"
+            return match["answer"], "faq", []
+
+        llm_answer = self.llm_fallback(user_input, history=history)
+        suggestions = self.get_suggestions(user_input)
+        return llm_answer, "llm", suggestions

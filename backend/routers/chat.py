@@ -25,6 +25,8 @@ def chat(payload: ChatRequest):
             reply=empty_input_response(),
             conversation_id=payload.conversation_id or crud.create_conversation(),
             latency_ms=0,
+            source="error",
+            suggestions=[],
         )
 
     # ── 2. Prompt injection check ────────────────────────────────────────────
@@ -40,6 +42,8 @@ def chat(payload: ChatRequest):
             reply=safe_fallback_response(),
             conversation_id=conversation_id,
             latency_ms=int((time.time() - start) * 1000),
+            source="error",
+            suggestions=[],
         )
 
     # ── 3. PII check (log but don't block) ───────────────────────────────────
@@ -58,14 +62,18 @@ def chat(payload: ChatRequest):
         content=safe_content,
     )
 
-    # ── 6. Get answer (FAQ first, then LLM fallback) ─────────────────────────
+    # ── 6. Fetch conversation history for memory ─────────────────────────────
+    history = crud.get_messages(conversation_id=conversation_id, limit=6)
+
+    # ── 7. Get answer (FAQ first, then LLM fallback with history) ────────────
     try:
-        reply_text, source = faq.get_answer(payload.message)
+        reply_text, source, suggestions = faq.get_answer(payload.message, history=history)
     except Exception:
         reply_text = api_error_response()
         source = "error"
+        suggestions = []
 
-    # ── 7. Save assistant message ────────────────────────────────────────────
+    # ── 8. Save assistant message ────────────────────────────────────────────
     crud.save_message(
         conversation_id=conversation_id,
         role="assistant",
@@ -78,4 +86,6 @@ def chat(payload: ChatRequest):
         reply=reply_text,
         conversation_id=conversation_id,
         latency_ms=latency_ms,
+        source=source,
+        suggestions=suggestions,
     )

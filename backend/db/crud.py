@@ -258,3 +258,21 @@ def get_recent_request_logs(limit: int = 20):
         ]
     finally:
         db.close()
+
+def get_messages(conversation_id: uuid.UUID, limit: int = 6) -> list:
+    """Returns the last N messages for a conversation, ordered oldest first."""
+    db: Session = SessionLocal()
+    try:
+        stmt = (
+            select(Message)
+            .where(Message.conversation_id == conversation_id)
+            .order_by(Message.created_at.desc())
+            .limit(limit)
+        )
+        messages = db.execute(stmt).scalars().all()
+        return [
+            {"role": m.role, "content": m.content}
+            for m in reversed(messages)
+        ]
+    finally:
+        db.close()

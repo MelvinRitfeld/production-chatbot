@@ -23,10 +23,10 @@ FAQ_ENTRIES = [
         "tags": ["tentamen", "toets", "begrippen"]
     },
     {
-        "id": "40_procent_regeling",
-        "question": "Wat is de 40%-regeling?",
-        "answer": "De 40%-regeling geldt voor tentamens die zijn opgebouwd uit meerdere toetsen. Je moet voor elke afzonderlijke toets minimaal 40% van de maximaal te behalen punten halen, én het totale tentamenresultaat moet minimaal 55% zijn. Alleen dan ontvang je de studiepunten voor dat tentamen.",
-        "tags": ["40procent", "regeling", "tentamen", "cijfer"]
+       "id": "40_procent_regeling",
+       "question": "Wat is de 40%-regeling?",
+       "answer": "De 40%-regeling geldt voor tentamens die zijn opgebouwd uit meerdere toetsen. Je moet voor elke afzonderlijke toets minimaal 40% van de maximaal te behalen punten halen, én het totale tentamenresultaat moet minimaal 55% zijn. Alleen dan ontvang je de studiepunten voor dat tentamen.",
+       "tags": ["40procent", "regeling", "tentamen", "cijfer", "veertig", "procent", "40"]
     },
     {
         "id": "studiepunt_uren",
@@ -46,6 +46,7 @@ FAQ_ENTRIES = [
         "answer": "De propedeuse is de eerste fase van de opleiding, ter grootte van 60 studiepunten. De postpropedeuse is de fase die direct volgt op de propedeuse en omvat 180 studiepunten.",
         "tags": ["propedeuse", "postpropedeuse", "fase", "ec"]
     },
+    
 
     # =========================
     # 🎓 TOELATING & INSCHRIJVING
