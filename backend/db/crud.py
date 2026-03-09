@@ -91,10 +91,10 @@ def save_request_log(
     status_code: int,
     latency_ms: int,
     error_message: Optional[str],
-    source: Optional[str] = None,          # ✅ NEW
-    faq_match_id: Optional[str] = None,    # ✅ NEW
-    faq_score: Optional[int] = None,       # ✅ NEW
-    user_input: Optional[str] = None,      # ✅ NEW
+    source: Optional[str] = None,          #  NEW
+    faq_match_id: Optional[str] = None,    #  NEW
+    faq_score: Optional[int] = None,       #  NEW
+    user_input: Optional[str] = None,      #  NEW
 ) -> None:
     db: Session = SessionLocal()
     try:
@@ -168,7 +168,7 @@ def get_metrics() -> Dict[str, Any]:
             "avg_latency_ms": avg_latency_ms,
             "error_count": int(error_count),
             "success_rate": float(success_rate),
-            # ✅ NEW
+            # NEW
             "total_chat_requests": int(total_chat_requests),
             "faq_matches": int(faq_matches),
             "unmatched": int(unmatched),
