@@ -5,6 +5,7 @@ import { chat } from "@/lib/api";
 import type { ChatMessage } from "@/lib/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+const MAX_CHARS = 500;
 
 function makeId() {
   return crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
@@ -88,9 +89,7 @@ function FeedbackButtons({
         onClick={() => submitFeedback(1)}
         disabled={voted !== null}
         className={`text-xs px-1.5 py-0.5 rounded transition-all ${
-          voted === "up"
-            ? "text-emerald-400"
-            : "text-zinc-600 hover:text-zinc-400"
+          voted === "up" ? "text-emerald-400" : "text-zinc-600 hover:text-zinc-400"
         }`}
         title="Nuttig"
       >
@@ -100,9 +99,7 @@ function FeedbackButtons({
         onClick={() => submitFeedback(-1)}
         disabled={voted !== null}
         className={`text-xs px-1.5 py-0.5 rounded transition-all ${
-          voted === "down"
-            ? "text-red-400"
-            : "text-zinc-600 hover:text-zinc-400"
+          voted === "down" ? "text-red-400" : "text-zinc-600 hover:text-zinc-400"
         }`}
         title="Niet nuttig"
       >
@@ -155,8 +152,6 @@ function MessageBubble({
         <div className="bg-zinc-800 border border-zinc-700/60 text-zinc-100 rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed shadow">
           {msg.content}
         </div>
-
-        {/* Meta row: time, latency, source badge, feedback */}
         <div className="flex items-center gap-2 mt-1.5 flex-wrap">
           <p className="text-xs text-zinc-500">{time}</p>
           {msg.latency_ms && (
@@ -165,8 +160,6 @@ function MessageBubble({
           <SourceBadge source={msg.source} />
           <FeedbackButtons conversationId={conversationId} messageId={msg.id} />
         </div>
-
-        {/* FAQ suggestions for LLM responses */}
         {msg.source === "llm" && msg.suggestions && msg.suggestions.length > 0 && (
           <div className="mt-3">
             <p className="text-xs text-zinc-500 mb-2">Misschien bedoel je...?</p>
@@ -205,12 +198,24 @@ export default function Home() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // Scroll to bottom on new messages
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isSending]);
 
+  // Auto-resize textarea as user types
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 128) + "px";
+  }, [input]);
+
+  const isOverLimit = input.length > MAX_CHARS;
+  const showCounter = input.length > MAX_CHARS * 0.8;
+
   async function handleSend(text: string) {
-    if (!text.trim() || isSending) return;
+    if (!text.trim() || isSending || text.length > MAX_CHARS) return;
     setInput("");
     setError(null);
     setIsSending(true);
@@ -327,7 +332,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* Initial suggested questions */}
           {showSuggestions && !isSending && (
             <div className="mt-6">
               <p className="text-xs text-zinc-500 mb-3 uppercase tracking-wider">Veelgestelde vragen</p>
@@ -352,7 +356,11 @@ export default function Home() {
       {/* Input */}
       <footer className="border-t border-zinc-800 bg-zinc-950 px-4 py-4">
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-end gap-3 bg-zinc-900 border border-zinc-700 focus-within:border-emerald-600/60 rounded-2xl px-4 py-3 transition-all">
+          <div className={`flex items-end gap-3 bg-zinc-900 border rounded-2xl px-4 py-3 transition-all ${
+            isOverLimit
+              ? "border-red-500/60 focus-within:border-red-500"
+              : "border-zinc-700 focus-within:border-emerald-600/60"
+          }`}>
             <textarea
               ref={inputRef}
               value={input}
@@ -366,7 +374,7 @@ export default function Home() {
             />
             <button
               onClick={() => handleSend(input)}
-              disabled={isSending || !input.trim()}
+              disabled={isSending || !input.trim() || isOverLimit}
               type="button"
               className="shrink-0 w-8 h-8 bg-emerald-600 hover:bg-emerald-500 disabled:bg-zinc-700 disabled:text-zinc-500 text-white rounded-xl flex items-center justify-center transition-all"
             >
@@ -376,9 +384,23 @@ export default function Home() {
               </svg>
             </button>
           </div>
-          <p className="text-xs text-zinc-600 mt-2 text-center">
-            Enter om te versturen · Shift+Enter voor nieuwe regel
-          </p>
+
+          <div className="flex justify-between items-center mt-2">
+            <p className="text-xs text-zinc-600">
+              Enter om te versturen · Shift+Enter voor nieuwe regel
+            </p>
+            {showCounter && (
+              <p className={`text-xs ${isOverLimit ? "text-red-400 font-medium" : "text-zinc-500"}`}>
+                {input.length}/{MAX_CHARS}
+              </p>
+            )}
+          </div>
+
+          {isOverLimit && (
+            <p className="text-xs text-red-400 mt-1">
+              Je bericht is te lang. Probeer het korter te formuleren (max {MAX_CHARS} tekens).
+            </p>
+          )}
         </div>
       </footer>
     </main>

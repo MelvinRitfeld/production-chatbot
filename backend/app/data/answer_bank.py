@@ -1,233 +1,121 @@
-FAQ_ENTRIES = [
-
-    # =====================================================
-# FAQ ADDITIONS — OER 2024-2025 UNASAT
-# Paste these entries into your FAQ_ENTRIES list
-# in backend/app/data/answer_bank.py
+# =====================================================
+# FAQ_ENTRIES — UNASAT Campus Assistent
+# Taal: Nederlands (je/jij), student-vriendelijk
 # =====================================================
 
+FAQ_ENTRIES = [
+
     # =========================
-    # 📖 ALGEMENE BEGRIPPEN
+    # 📋 TENTAMENS — REGISTRATIE & REGELS
     # =========================
 
     {
-        "id": "wat_is_onderwijseenheid",
-        "question": "Wat is een onderwijseenheid?",
-        "answer": "Een onderwijseenheid is een onderdeel van het aangeboden onderwijs dat samen met andere onderwijseenheden een semester vormt. Aan elke onderwijseenheid is een tentamen verbonden. Een onderwijseenheid kan ook een praktische oefening zijn.",
-        "tags": ["onderwijseenheid", "semester", "begrippen"]
+        "id": "tentamen_registratie",
+        "question": "Moet ik me registreren voor een tentamen?",
+        "answer": "Ja, je moet je altijd vooraf registreren voor een tentamen via Trajectplanner of het studentenportaal. Zonder geldige registratie kun je geweigerd worden bij de ingang.",
+        "tags": ["tentamen", "registratie", "inschrijven", "trajectplanner"]
     },
     {
-        "id": "tentamen_vs_toets",
-        "question": "Wat is het verschil tussen een tentamen en een toets?",
-        "answer": "Een tentamen is het volledige onderzoek naar kennis, inzicht en vaardigheden dat een onderwijseenheid afsluit. Een toets is een onderdeel van een tentamen waarbij een specifieke discipline wordt beoordeeld. Een tentamen kan dus bestaan uit meerdere toetsen.",
-        "tags": ["tentamen", "toets", "begrippen"]
+        "id": "tentamen_welk",
+        "question": "Hoe weet ik welk tentamen ik moet maken?",
+        "answer": "In het tentamenrooster op Trajectplanner zie je welke tentamens worden afgenomen. Kijk welke vakken je hebt gevolgd — voor die vakken moet je je registreren.",
+        "tags": ["tentamen", "rooster", "trajectplanner", "vak"]
     },
     {
-       "id": "40_procent_regeling",
-       "question": "Wat is de 40%-regeling?",
-       "answer": "De 40%-regeling geldt voor tentamens die zijn opgebouwd uit meerdere toetsen. Je moet voor elke afzonderlijke toets minimaal 40% van de maximaal te behalen punten halen, én het totale tentamenresultaat moet minimaal 55% zijn. Alleen dan ontvang je de studiepunten voor dat tentamen.",
-       "tags": ["40procent", "regeling", "tentamen", "cijfer", "veertig", "procent", "40"]
+        "id": "tentamen_hoe_registreren",
+        "question": "Hoe schrijf ik me in voor een tentamen?",
+        "answer": "Open de registratielink die je hebt ontvangen, vul je naam en studentnummer in, en kies het tentamen waarvoor je je wilt inschrijven. Zorg dat je de juiste docentnaam selecteert.",
+        "tags": ["tentamen", "registratie", "inschrijven", "link"]
     },
     {
-        "id": "studiepunt_uren",
-        "question": "Wat is 1 studiepunt waard in uren?",
-        "answer": "1 studiepunt staat gelijk aan 28 studiebelastingsuren. 60 studiepunten is gelijk aan 1.680 uur studie.",
-        "tags": ["studiepunt", "ec", "uren"]
+        "id": "tentamen_vergeten_registreren",
+        "question": "Ik ben vergeten me te registreren voor een tentamen. Wat nu?",
+        "answer": "Neem zo snel mogelijk contact op met de studentenadministratie. Zij kunnen je vertellen of er nog mogelijkheden zijn.",
+        "tags": ["tentamen", "vergeten", "registratie", "studentenadministratie"]
     },
     {
-        "id": "studiejaar_periode",
-        "question": "Wanneer begint en eindigt het studiejaar bij UNASAT?",
-        "answer": "Het studiejaar loopt van 1 november en eindigt op 31 oktober van het daaropvolgende kalenderjaar.",
-        "tags": ["studiejaar", "periode", "datum"]
+        "id": "tentamen_herkansing_aantal",
+        "question": "Hoe vaak mag ik een tentamen maken?",
+        "answer": "Je krijgt elk studiejaar twee kansen: een eerste kans na het onderwijs en één herkansing later in het jaar. Als het vak dat jaar niet gegeven wordt, is er slechts één kans.",
+        "tags": ["tentamen", "herkansen", "herkansing", "kansen"]
     },
     {
-        "id": "propedeuse_postpropedeuse",
-        "question": "Wat is het verschil tussen de propedeuse en de postpropedeuse?",
-        "answer": "De propedeuse is de eerste fase van de opleiding, ter grootte van 60 studiepunten. De postpropedeuse is de fase die direct volgt op de propedeuse en omvat 180 studiepunten.",
-        "tags": ["propedeuse", "postpropedeuse", "fase", "ec"]
-    },
-    
-
-    # =========================
-    # 🎓 TOELATING & INSCHRIJVING
-    # =========================
-
-    {
-        "id": "toelating_me_diploma",
-        "question": "Welke diploma's geven toegang tot de Bachelor Management & Economie?",
-        "answer": "Rechtstreekse toegang geven: IMEAO diploma niveau 4 met Bedrijfseconomie, Commerciële Economie of Bedrijfsadministratie; HAVO of VWO diploma met Wiskunde en/of Economie; NATIN diploma met Bedrijfskunde.",
-        "tags": ["toelating", "diploma", "management", "economie"]
-    },
-    {
-        "id": "toelating_ict_diploma",
-        "question": "Welke diploma's geven toegang tot de Bachelor ICT?",
-        "answer": "Rechtstreekse toegang geven: VWO diploma met voldoende voor Wiskunde 1; HAVO diploma met voldoende voor Wiskunde 1; NATIN diploma met voldoende voor Wiskunde.",
-        "tags": ["toelating", "diploma", "ict", "wiskunde"]
-    },
-    {
-        "id": "toelating_geen_diploma",
-        "question": "Ik heb geen geschikt diploma. Kan ik toch worden toegelaten?",
-        "answer": "Ja, via een instroomtoets. Als je de instroomtoets behaalt, kan de directeur je vrijstellen van de vooropleidingseisen. De vrijstelling is alleen geldig voor het studiejaar dat direct aansluit op de toetsdatum.",
-        "tags": ["toelating", "instroomtoets", "vrijstelling"]
-    },
-    {
-        "id": "toelating_buitenlands_diploma",
-        "question": "Ik heb een buitenlands diploma. Wordt dat erkend?",
-        "answer": "Een buitenlands diploma wordt als gelijkwaardig beschouwd als het toegang geeft tot het hoger onderwijs in een land dat het Verdrag inzake erkenning van kwalificaties heeft geratificeerd. Je moet ook voldoende Nederlands beheersen. Dit wordt beoordeeld door de examencommissie.",
-        "tags": ["buitenlands", "diploma", "erkenning", "toelating"]
-    },
-    {
-        "id": "toelating_bachelor_al",
-        "question": "Ik heb al een bachelor- of masterdiploma. Moet ik dan aan de vooropleidingseisen voldoen?",
-        "answer": "Nee. Houders van een bachelor- of mastergraad, of studenten met een propedeusegetuigschrift van een andere hogeronderwijsinstelling, zijn vrijgesteld van de vooropleidingseisen.",
-        "tags": ["toelating", "bachelor", "master", "vrijstelling"]
-    },
-
-    # =========================
-    # 🏗️ OPLEIDINGEN & STRUCTUUR
-    # =========================
-
-    {
-        "id": "totaal_studiepunten",
-        "question": "Hoeveel studiepunten heeft de opleiding in totaal?",
-        "answer": "De opleiding heeft een totale studielast van 240 EC: propedeuse fase 60 EC, postpropedeuse fase 180 EC.",
-        "tags": ["studiepunten", "ec", "opleiding", "240"]
-    },
-    {
-        "id": "opleiding_deeltijd",
-        "question": "Is de opleiding fulltime of deeltijd?",
-        "answer": "De opleiding is deeltijds ingericht.",
-        "tags": ["deeltijd", "fulltime", "opleiding"]
-    },
-    {
-        "id": "onderwijstaal",
-        "question": "In welke taal wordt er les gegeven?",
-        "answer": "Het onderwijs wordt gegeven in het Nederlands en/of Engels. Uitzonderingen zijn toegestaan bij gastcolleges door anderstalige docenten of als de aard van het onderwijs dit vereist.",
-        "tags": ["taal", "nederlands", "engels", "onderwijs"]
-    },
-    {
-        "id": "studierichtingen_me",
-        "question": "Wat zijn de studierichtingen van Management & Economie?",
-        "answer": "Binnen de opleiding Management & Economie zijn er drie studierichtingen: Bedrijfseconomie, Bedrijfskunde en Communicatiemanagement.",
-        "tags": ["studierichting", "management", "economie", "bedrijfskunde"]
-    },
-    {
-        "id": "studierichtingen_ict",
-        "question": "Wat zijn de studierichtingen van ICT?",
-        "answer": "Binnen de opleiding ICT zijn er drie studierichtingen: Bedrijfskundige Informatica, System and Network Engineering en Software Engineering.",
-        "tags": ["studierichting", "ict", "software", "netwerk"]
-    },
-    {
-        "id": "propedeuse_doelen",
-        "question": "Wat zijn de doelstellingen van de propedeuse?",
-        "answer": "De propedeuse heeft drie doelstellingen: 1. Oriëntatie op de opleiding en het beroepenveld. 2. Verwijzing naar de meest passende studierichting. 3. Selectie: beoordeling of de student geschikt is voor de opleiding.",
-        "tags": ["propedeuse", "doelstelling", "oriëntatie"]
-    },
-
-    # =========================
-    # 📋 EXAMENS & GETUIGSCHRIFTEN
-    # =========================
-
-    {
-        "id": "diploma_behalen",
-        "question": "Wanneer heb ik mijn bachelor-diploma behaald?",
-        "answer": "Je bachelor-diploma is behaald als alle onderwijseenheden van de volledige opleiding (propedeuse én postpropedeuse) met goed gevolg zijn afgelegd of daarvoor vrijstelling is verkregen. Het afsluitend examen kan pas behaald worden nadat ook het propedeuse-examen is behaald.",
-        "tags": ["diploma", "bachelor", "afstuderen"]
-    },
-    {
-        "id": "graad_na_afstuderen",
-        "question": "Welke graad ontvang ik na afstuderen?",
-        "answer": "Na het afstuderen ontvang je de graad Bachelor in Management & Economics of Bachelor in ICT. Je bent gerechtigd de titel BBA (Bachelor of Business Administration) te voeren.",
-        "tags": ["graad", "titel", "bba", "bachelor"]
-    },
-    {
-        "id": "cum_laude_propedeuse",
-        "question": "Wanneer behaal ik de propedeuse cum laude?",
-        "answer": "Je behaalt de propedeuse cum laude als je: de propedeuse in 1 jaar hebt behaald, maximaal 30 EC aan vrijstellingen hebt ontvangen, een gemiddeld eindcijfer van minimaal 8,0 (onafgerond) hebt, en alle toetsen hebt afgesloten met minimaal een 7.",
-        "tags": ["cum laude", "propedeuse", "gemiddelde"]
-    },
-    {
-        "id": "cum_laude_bachelor",
-        "question": "Wanneer behaal ik mijn bachelor cum laude?",
-        "answer": "Je behaalt cum laude als je: de opleiding in maximaal 4 jaar hebt behaald, maximaal 30 EC aan vrijstellingen hebt, een gemiddeld eindcijfer van minimaal 8,0 (afgerond) hebt, alle toetsen minimaal een 7,0 hebt en het afstudeerwerk minimaal een 8,0 (onafgerond).",
-        "tags": ["cum laude", "bachelor", "gemiddelde", "afstuderen"]
-    },
-    {
-        "id": "diploma_uitreiking",
-        "question": "Wanneer worden diploma's uitgereikt?",
-        "answer": "Aan het begin van elk studiejaar worden de uitreikdata vastgesteld. De uitslag van het propedeuse-examen wordt eenmaal per jaar vastgesteld, aan het einde van het studiejaar na de laatste herkansingen. Op verzoek kan de uitslag ook tussentijds worden vastgesteld.",
-        "tags": ["diploma", "uitreiking", "datum", "ceremonie"]
-    },
-
-    # =========================
-    # ✏️ TENTAMENS — REGELS
-    # =========================
-
-    {
-        "id": "tentamen_kansen_per_jaar",
-        "question": "Hoe vaak per jaar mag ik een tentamen afleggen?",
-        "answer": "Je krijgt elk studiejaar twee kansen per tentamen: een eerste kans direct aansluitend op het onderwijs, en een herkansing later in het studiejaar. Als het onderwijs dat jaar niet wordt gegeven, is er slechts één kans.",
-        "tags": ["tentamen", "herkansing", "kansen", "jaar"]
+        "id": "tentamen_aanwezig_wanneer",
+        "question": "Hoe laat moet ik aanwezig zijn voor een tentamen?",
+        "answer": "Zorg dat je minimaal 15 minuten vóór aanvang aanwezig bent. Te laat komen kan betekenen dat je niet meer mee mag doen.",
+        "tags": ["tentamen", "aanwezig", "tijd", "te laat"]
     },
     {
         "id": "tentamen_te_laat",
         "question": "Ik kom te laat voor het tentamen. Mag ik nog meedoen?",
-        "answer": "Als je meer dan 30 minuten te laat bent, kan de toegang tot het tentamen worden geweigerd.",
-        "tags": ["tentamen", "te laat", "toegang"]
+        "answer": "Als je meer dan 30 minuten te laat bent, kan de toegang worden geweigerd. Probeer op tijd aanwezig te zijn — we raden aan minimaal 15 minuten van tevoren te komen.",
+        "tags": ["tentamen", "te laat", "toegang", "weigeren"]
     },
     {
         "id": "tentamen_vroeg_verlaten",
         "question": "Mag ik het tentamenlokaal vroeg verlaten?",
-        "answer": "Nee, tijdens de eerste 60 minuten is het niet toegestaan het lokaal te verlaten.",
-        "tags": ["tentamen", "verlaten", "lokaal"]
+        "answer": "Nee, tijdens de eerste 60 minuten mag je het lokaal niet verlaten.",
+        "tags": ["tentamen", "verlaten", "lokaal", "vroeg"]
+    },
+    {
+        "id": "tentamen_laptop",
+        "question": "Mag ik mijn laptop bij me hebben tijdens een tentamen?",
+        "answer": "Dat hangt af van het type tentamen. Bij sommige tentamens is een laptop toegestaan, bij andere niet. De docent of het tentamenrooster geeft dit aan.",
+        "tags": ["tentamen", "laptop", "hulpmiddelen", "computer"]
     },
     {
         "id": "tentamen_telefoon",
         "question": "Mag ik mijn telefoon bij me hebben tijdens een tentamen?",
-        "answer": "Nee. Mobiele telefoons en andere ICT-middelen moeten vóór aanvang van het tentamen worden uitgeschakeld en opgeborgen. Gebruik is niet toegestaan, tenzij uitdrukkelijk anders is aangegeven.",
-        "tags": ["telefoon", "tentamen", "regels"]
+        "answer": "Nee. Je telefoon moet vóór aanvang worden uitgeschakeld en opgeborgen. Gebruik is niet toegestaan, tenzij de docent dit uitdrukkelijk aangeeft.",
+        "tags": ["tentamen", "telefoon", "regels", "verbod"]
     },
     {
-        "id": "tentamen_hulpmiddelen",
-        "question": "Welke hulpmiddelen mag ik gebruiken bij een tentamen?",
-        "answer": "Alleen schrijfgerei en materiaal dat ter plekke wordt uitgedeeld zijn standaard toegestaan. Andere hulpmiddelen zijn alleen toegestaan als dit uitdrukkelijk is aangegeven op het tentamenwerk.",
-        "tags": ["hulpmiddelen", "tentamen", "rekenmachine"]
-    },
-    {
-        "id": "tentamen_legitimatie",
+        "id": "tentamen_meenemen",
         "question": "Wat moet ik meenemen naar een tentamen?",
-        "answer": "Je moet je studentenpas meenemen, uitgegeven door de opleiding, om je te legitimeren.",
-        "tags": ["legitimatie", "studentenpas", "tentamen"]
+        "answer": "Neem je studentenpas mee als legitimatie. Schrijfmateriaal is standaard toegestaan. Andere hulpmiddelen (zoals een rekenmachine) alleen als dit staat vermeld op het tentamen.",
+        "tags": ["tentamen", "meenemen", "studentenpas", "legitimatie", "hulpmiddelen"]
     },
     {
-        "id": "tentamen_overmacht",
-        "question": "Ik kon een toets niet maken vanwege overmacht. Wat nu?",
-        "answer": "Je bent aangewezen op de volgende toetsgelegenheid. In bijzondere gevallen kan de examencommissie in jouw voordeel afwijken van deze regel. Overmacht moet wel duidelijk kunnen worden aangetoond.",
-        "tags": ["overmacht", "toets", "gemist"]
+        "id": "tentamen_herkansing_datum",
+        "question": "Wanneer is de herkansing?",
+        "answer": "De herkansingsdata staan in het tentamenrooster op Trajectplanner. Alleen studenten die aan de voorwaarden voldoen mogen deelnemen.",
+        "tags": ["herkansing", "datum", "rooster", "trajectplanner"]
     },
     {
-        "id": "tentamen_online_regels",
-        "question": "Hoe werkt een online tentamen?",
-        "answer": "Bij een online tentamen ben je zelf verantwoordelijk voor een werkende internetverbinding. Je legt het tentamen alleen af in een afgesloten ruimte. Niet-noodzakelijke programma's en tabs moeten gesloten zijn. Samenwerken of informatie delen is fraude. Bij technische problemen meld je dit direct aan de docent.",
-        "tags": ["online", "tentamen", "thuis", "regels"]
-    },
-    {
-        "id": "tentamen_beoordelingstermijn",
-        "question": "Binnen hoeveel tijd moet ik mijn tentamencijfer ontvangen?",
-        "answer": "Voor schriftelijke examens uiterlijk 10 werkdagen na de toetsdatum. Voor beroepsproducten geldt een termijn van 20 werkdagen.",
-        "tags": ["cijfer", "termijn", "uitslag", "werkdagen"]
+        "id": "tentamen_cijfer_termijn",
+        "question": "Wanneer krijg ik mijn tentamencijfer?",
+        "answer": "Voor schriftelijke tentamens binnen 10 werkdagen na de toetsdatum. Voor beroepsproducten geldt een termijn van 20 werkdagen.",
+        "tags": ["cijfer", "termijn", "uitslag", "werkdagen", "nakijken"]
     },
     {
         "id": "tentamen_inzage",
         "question": "Mag ik mijn tentamen terugkijken na beoordeling?",
-        "answer": "Ja. Na het bekendmaken van de uitslag heb je recht op inzage in je beoordeelde werk. De examinator bespreekt dit individueel of groepsgewijs met de student(en).",
-        "tags": ["inzage", "tentamen", "nakijken", "cijfer"]
+        "answer": "Ja, na het bekendmaken van het cijfer heb je recht op inzage. De examinator bespreekt dit individueel of in groep met je.",
+        "tags": ["inzage", "tentamen", "terugkijken", "nakijken"]
+    },
+    {
+        "id": "tentamen_online",
+        "question": "Hoe werkt een online tentamen?",
+        "answer": "Je bent zelf verantwoordelijk voor een werkende internetverbinding. Maak het tentamen alleen in een afgesloten ruimte. Sluit alle onnodige programma's en tabbladen. Samenwerken of informatie delen is fraude. Meld technische problemen direct aan de docent.",
+        "tags": ["online", "tentamen", "thuis", "internet", "regels"]
+    },
+    {
+        "id": "tentamen_overmacht",
+        "question": "Ik heb een tentamen gemist door overmacht. Wat kan ik doen?",
+        "answer": "In dat geval ben je normaal aangewezen op de volgende herkansing. Bij aantoonbare bijzondere omstandigheden kan de examencommissie een uitzondering maken. Neem contact op en zorg dat je de overmacht kunt aantonen.",
+        "tags": ["tentamen", "gemist", "overmacht", "ziek"]
     },
     {
         "id": "tentamen_data_bekendmaking",
         "question": "Wanneer worden de tentamendata bekendgemaakt?",
-        "answer": "De tijdvakken voor tentamens worden jaarlijks vastgesteld en uiterlijk bij aanvang van het studiejaar schriftelijk bekendgemaakt.",
-        "tags": ["tentamendata", "rooster", "bekendmaking"]
+        "answer": "De tentamentijdvakken worden jaarlijks vastgesteld en uiterlijk bij de start van het studiejaar bekendgemaakt via Trajectplanner.",
+        "tags": ["tentamendata", "rooster", "bekendmaking", "planning"]
+    },
+    {
+        "id": "tentamen_extra_herkansing",
+        "question": "Kan ik een extra herkansing krijgen?",
+        "answer": "Dat is alleen mogelijk in bijzondere gevallen en in afstemming met de opleidingscoördinator. Neem contact op om je situatie te bespreken.",
+        "tags": ["herkansing", "extra", "uitzondering", "coördinator"]
     },
 
     # =========================
@@ -235,75 +123,299 @@ FAQ_ENTRIES = [
     # =========================
 
     {
-        "id": "beoordelingsschaal",
-        "question": "Op welke schaal worden tentamens beoordeeld?",
-        "answer": "Tentamens worden beoordeeld op een schaal van 1 t/m 10, met maximaal 1 decimaal. Een 6 is voldoende, 7 is ruim voldoende, 8 is goed, 9 is zeer goed en 10 is uitmuntend.",
-        "tags": ["cijfer", "schaal", "beoordeling"]
+        "id": "voldoende_grens",
+        "question": "Wanneer heb ik een voldoende?",
+        "answer": "Je hebt een voldoende bij een 5,5 of hoger, of bij de kwalificatie 'voldaan'.",
+        "tags": ["voldoende", "5.5", "cijfer", "grens", "zakken"]
     },
     {
-        "id": "voldoende_grens",
-        "question": "Wanneer heb ik een voldoende voor een tentamen?",
-        "answer": "Je hebt een voldoende als je een 5,5 of hoger behaalt, of als de kwalificatie 'voldaan' of 'voldoende' wordt toegekend.",
-        "tags": ["voldoende", "5.5", "grens", "cijfer"]
+        "id": "beoordelingsschaal",
+        "question": "Op welke schaal worden tentamens beoordeeld?",
+        "answer": "Tentamens worden beoordeeld op een schaal van 1 t/m 10, met maximaal 1 decimaal. Een 6 is voldoende, een 8 is goed en een 10 is uitmuntend.",
+        "tags": ["cijfer", "schaal", "beoordeling", "10"]
+    },
+    {
+        "id": "40_procent_regeling",
+        "question": "Wat is de 40%-regeling?",
+        "answer": "Als een tentamen bestaat uit meerdere toetsen, moet je voor elke afzonderlijke toets minimaal 40% halen én moet het totale tentamencijfer minimaal 55% zijn. Alleen dan ontvang je de studiepunten.",
+        "tags": ["40procent", "regeling", "tentamen", "toets", "cijfer"]
     },
     {
         "id": "herkansing_voldoende",
         "question": "Ik heb een voldoende. Mag ik toch herkansen?",
-        "answer": "Nee. Bij een voldoende resultaat (5,5 of hoger) is herkansing van dat onderdeel niet meer mogelijk.",
-        "tags": ["herkansing", "voldoende", "herkansen"]
+        "answer": "Nee. Als je een 5,5 of hoger hebt gehaald, is herkansing van dat onderdeel niet meer mogelijk.",
+        "tags": ["herkansing", "voldoende", "herkansen", "niet"]
     },
     {
-        "id": "cijfer_5_3_of_5_4",
-        "question": "Ik heb een 5,3 of 5,4 gehaald. Wat zijn mijn opties?",
-        "answer": "Je krijgt de mogelijkheid om een mondelinge toelichting te geven of een aanvullende schriftelijke opdracht te maken. Dit wordt afgenomen door de vakdocent en een collega. Dit geldt alleen voor tentamens en beroepsproducten afgenomen door UNASAT.",
-        "tags": ["5.3", "5.4", "mondeling", "aanvulling", "cijfer"]
+        "id": "cijfer_5_3_5_4",
+        "question": "Ik heb een 5,3 of 5,4 gehaald. Zijn er nog opties?",
+        "answer": "Ja! Je krijgt de kans om een mondeling toelichting te geven of een aanvullende opdracht te maken. Dit wordt gedaan door de vakdocent samen met een collega.",
+        "tags": ["5.3", "5.4", "mondeling", "aanvulling", "cijfer", "bijna voldoende"]
     },
     {
         "id": "her_correctie",
-        "question": "Ik heb een cijfer van 5,0 t/m 5,4 en ben het er niet mee eens. Wat kan ik doen?",
-        "answer": "Je kunt eenmalig her-correctie aanvragen bij de examencommissie. Dit doe je schriftelijk, beargumenteerd, binnen 3 werkdagen nadat het cijfer bekendgemaakt is. De examencommissie wijst een deskundige aan die binnen 3 werkdagen rapporteert. Het besluit is bindend.",
-        "tags": ["her-correctie", "bezwaar", "cijfer", "5.0"]
+        "question": "Ik ben het niet eens met mijn cijfer van 5,0 t/m 5,4. Wat kan ik doen?",
+        "answer": "Je kunt eenmalig een her-correctie aanvragen bij de examencommissie. Doe dit schriftelijk, beargumenteerd, binnen 3 werkdagen na bekendmaking. De commissie wijst een deskundige aan die binnen 3 werkdagen besluit. Het besluit is bindend.",
+        "tags": ["her-correctie", "bezwaar", "cijfer", "5.0", "onterecht"]
     },
     {
-        "id": "functiebeperking_tentamen",
-        "question": "Ik heb een functiebeperking. Zijn er aanpassingen mogelijk bij tentamens?",
-        "answer": "Ja. Je kunt aan de examencommissie verzoeken om de toets aan te passen aan je individuele beperking. De examencommissie vraagt advies bij de studiebegeleider voordat zij beslist.",
-        "tags": ["beperking", "aanpassing", "tentamen", "dyslexie"]
+        "id": "cijferlijst_aanvragen",
+        "question": "Hoe vraag ik een officiële cijferlijst aan?",
+        "answer": "Je kunt een officiële cijferlijst aanvragen bij de cijferadministratie. De kosten zijn SRD 20 per pagina. Dit kan ook na je afstuderen.",
+        "tags": ["cijferlijst", "aanvragen", "officieel", "SRD", "document"]
+    },
+    {
+        "id": "cijfers_niet_zichtbaar",
+        "question": "Waarom zie ik niet al mijn cijfers in Trajectplanner?",
+        "answer": "Het kan zijn dat de docent de cijfers nog niet heeft ingeleverd, of ze worden nog verwerkt door de cijferadministratie. Neem contact op via cijferadministratie@unasat.sr als het te lang duurt.",
+        "tags": ["cijfer", "trajectplanner", "zichtbaar", "verwerking", "docent"]
+    },
+    {
+        "id": "cijfer_onjuist",
+        "question": "Mijn cijfer in Trajectplanner klopt niet. Wat doe ik?",
+        "answer": "Stuur een e-mail naar de cijferadministratie met je naam, studentnummer, vaknaam en een korte uitleg. Stuur indien mogelijk ook bewijs mee.",
+        "tags": ["cijfer", "fout", "onjuist", "trajectplanner", "correctie"]
+    },
+    {
+        "id": "cijferadministratie_contact",
+        "question": "Hoe kan ik contact opnemen met de cijferadministratie?",
+        "answer": "Via e-mail: cijferadministratie@unasat.sr. Telefonisch bereikbaar van maandag t/m vrijdag tussen 12:00 en 16:00 via 438718 of 430490.",
+        "tags": ["cijferadministratie", "contact", "email", "telefoon", "bereikbaar"]
     },
 
     # =========================
-    # 🏅 VRIJSTELLINGEN
+    # 💰 FINANCIEEL & COLLEGEGELD
+    # =========================
+
+    {
+        "id": "collegegeld_wanneer",
+        "question": "Wanneer moet ik collegegeld betalen?",
+        "answer": "Het collegegeld moet vóór de start van het semester zijn betaald, conform de deadline die UNASAT heeft vastgesteld.",
+        "tags": ["collegegeld", "betalen", "deadline", "semester"]
+    },
+    {
+        "id": "collegegeld_te_laat",
+        "question": "Wat gebeurt er als ik mijn collegegeld te laat betaal?",
+        "answer": "Bij een te late betaling kan UNASAT je tijdelijk blokkeren voor lessen en tentamens totdat de betaling is voldaan.",
+        "tags": ["collegegeld", "te laat", "blokkering", "tentamen", "les"]
+    },
+    {
+        "id": "betalingsregeling",
+        "question": "Kan ik mijn collegegeld in termijnen betalen?",
+        "answer": "In sommige gevallen is een betalingsregeling mogelijk. Neem hiervoor contact op met de financiële administratie van UNASAT.",
+        "tags": ["termijn", "betaling", "betalingsregeling", "collegegeld", "financieel"]
+    },
+    {
+        "id": "betaling_controleren",
+        "question": "Hoe controleer ik of mijn betaling is verwerkt?",
+        "answer": "Je kunt de status van je betaling bekijken in het studentenportaal. Is het na een paar werkdagen nog niet zichtbaar? Neem dan contact op met de financiële administratie.",
+        "tags": ["betaling", "verwerkt", "portaal", "status", "controleren"]
+    },
+    {
+        "id": "teveel_betaald",
+        "question": "Ik heb per ongeluk te veel collegegeld betaald. Wat nu?",
+        "answer": "Neem contact op met de financiële administratie voor een terugbetaling of verrekening.",
+        "tags": ["teveel", "betaald", "terugbetaling", "financieel"]
+    },
+    {
+        "id": "extra_kosten",
+        "question": "Zijn er extra kosten naast het collegegeld?",
+        "answer": "Ja, er kunnen extra kosten zijn voor studiemateriaal of specifieke faciliteiten. Dit verschilt per opleiding.",
+        "tags": ["extra", "kosten", "collegegeld", "studiemateriaal"]
+    },
+    {
+        "id": "collegegeld_niet_betaald",
+        "question": "Wat gebeurt er als ik helemaal niet betaal?",
+        "answer": "Als je niet betaalt, kan je inschrijving worden opgeschort of beëindigd.",
+        "tags": ["niet betaald", "opschorten", "inschrijving", "beëindigen"]
+    },
+    {
+        "id": "trajectplanner_toegang_na_betaling",
+        "question": "Wanneer krijg ik toegang tot Trajectplanner na mijn betaling?",
+        "answer": "Nadat je betaling is ontvangen, wordt je studentstatus geactiveerd. Dit duurt meestal een paar werkdagen.",
+        "tags": ["trajectplanner", "toegang", "betaling", "activeren", "werkdagen"]
+    },
+    {
+        "id": "nob_lening_cijfers",
+        "question": "Ik heb een NOB-lening. Wanneer worden mijn cijfers ingevoerd?",
+        "answer": "Je cijfers worden ingevoerd zodra het studiegeld door de NOB is overgemaakt en je status is gewijzigd naar 'student'.",
+        "tags": ["NOB", "lening", "cijfers", "status", "studiegeld"]
+    },
+
+    # =========================
+    # 📝 INSCHRIJVING & TOELATING
+    # =========================
+
+    {
+        "id": "inschrijving_documenten",
+        "question": "Welke documenten heb ik nodig om me in te schrijven?",
+        "answer": "Je hebt nodig: je middelbareschooldiploma met cijferlijsten, een CBB-uittreksel, een nationaliteitsverklaring, 2 recente pasfoto's en het betalingsbewijs.",
+        "tags": ["inschrijving", "documenten", "diploma", "pasfoto", "CBB"]
+    },
+    {
+        "id": "toelatingseisen_soi",
+        "question": "Wat zijn de toelatingseisen voor SOI?",
+        "answer": "Voor SOI heb je een middelbareschooldiploma nodig met voldoendes voor Nederlands, Engels en Economie 1 of Wiskunde.",
+        "tags": ["toelating", "SOI", "diploma", "wiskunde", "economie"]
+    },
+    {
+        "id": "inschrijving_deadline",
+        "question": "Tot wanneer kan ik me inschrijven?",
+        "answer": "Inschrijvingen kunnen plaatsvinden tot eind augustus, tenzij anders vermeld op de website van UNASAT.",
+        "tags": ["inschrijving", "deadline", "augustus", "uiterste datum"]
+    },
+    {
+        "id": "inschrijving_bevestiging",
+        "question": "Hoe weet ik dat ik ben ingeschreven?",
+        "answer": "Je ontvangt een verificatiemail van de administratie van UNASAT zodra je inschrijving is verwerkt.",
+        "tags": ["inschrijving", "bevestiging", "mail", "verificatie"]
+    },
+    {
+        "id": "associate_vs_bachelor",
+        "question": "Wat is het verschil tussen de Associate Degree en de Bachelor?",
+        "answer": "De Associate Degree is een 2-jarige opleiding op niveau 5 (tussen MBO en HBO). De Bachelor is 4 jaar op niveau 6 (volledig HBO).",
+        "tags": ["associate degree", "bachelor", "verschil", "niveau", "jaren"]
+    },
+    {
+        "id": "screening_duur",
+        "question": "Hoe lang duurt de screeningprocedure?",
+        "answer": "De screeningprocedure duurt meestal 1 tot 2 weken. Daarna hoor je of je definitief bent ingeschreven.",
+        "tags": ["screening", "procedure", "duur", "weken", "inschrijving"]
+    },
+    {
+        "id": "toelating_geen_diploma",
+        "question": "Ik voldoe niet aan de toelatingseisen. Kan ik toch worden toegelaten?",
+        "answer": "Ja, als je de instroomtoets behaalt, kan de directeur je vrijstellen van de vooropleidingseisen. De vrijstelling geldt alleen voor het studiejaar direct na de toets.",
+        "tags": ["toelating", "instroomtoets", "vrijstelling", "geen diploma"]
+    },
+    {
+        "id": "inschrijving_online",
+        "question": "Kan ik me online inschrijven bij UNASAT?",
+        "answer": "Ja, inschrijven gaat normaal online via het inschrijfformulier. Soms moet je documenten persoonlijk inleveren voor verificatie. De administratie laat je weten als dat nodig is.",
+        "tags": ["inschrijving", "online", "formulier", "persoonlijk"]
+    },
+    {
+        "id": "inschrijving_zonder_diploma",
+        "question": "Kan ik me inschrijven als ik mijn diploma nog niet heb ontvangen?",
+        "answer": "Ja, een voorlopige inschrijving is mogelijk als je diploma of cijferlijst er nog niet is. Je moet het document alsnog binnen de gestelde termijn aanleveren bij de studentenadministratie.",
+        "tags": ["inschrijving", "diploma", "nog niet", "voorlopig"]
+    },
+    {
+        "id": "inschrijving_niet_verwerkt",
+        "question": "Mijn inschrijving is niet verwerkt. Wat doe ik?",
+        "answer": "Controleer eerst of je aan alle voorwaarden voldoet en alle documenten hebt ingeleverd. Klopt dat? Neem dan contact op met de studentenadministratie via e-mail.",
+        "tags": ["inschrijving", "niet verwerkt", "probleem", "studentenadministratie"]
+    },
+    {
+        "id": "inschrijving_deadline_voorbij",
+        "question": "De inschrijvingsdeadline is voorbij. Kan ik me nog inschrijven?",
+        "answer": "Helaas, na de gestelde deadline is inschrijving niet meer mogelijk.",
+        "tags": ["inschrijving", "deadline", "voorbij", "te laat"]
+    },
+
+    # =========================
+    # 💻 TRAJECTPLANNER & BUKU
+    # =========================
+
+    {
+        "id": "trajectplanner_inloggen",
+        "question": "Ik kan niet inloggen in Trajectplanner. Wat kan ik doen?",
+        "answer": "Dit kan komen door een verkeerd wachtwoord, geen actieve studentstatus, of een openstaande betaling. Controleer dit of neem contact op met de cijferadministratie.",
+        "tags": ["trajectplanner", "inloggen", "wachtwoord", "probleem", "blokkering"]
+    },
+    {
+        "id": "trajectplanner_wachtwoord",
+        "question": "Ik ben mijn wachtwoord voor Trajectplanner vergeten.",
+        "answer": "Neem contact op met de cijferadministratie via cijferadministratie@unasat.sr om je wachtwoord opnieuw te laten instellen.",
+        "tags": ["trajectplanner", "wachtwoord", "vergeten", "reset"]
+    },
+    {
+        "id": "trajectplanner_stage",
+        "question": "Ik heb tijdens mijn stage geen toegang tot Trajectplanner. Wat nu?",
+        "answer": "Je kunt kosteloos een overzicht van je leerroute en behaalde cijfers aanvragen bij de cijferadministratie.",
+        "tags": ["trajectplanner", "stage", "toegang", "overzicht", "cijfers"]
+    },
+    {
+        "id": "buku_inloggen",
+        "question": "Hoe kan ik inloggen in mijn BUKU account?",
+        "answer": "Bij problemen met inloggen in BUKU kun je contact opnemen met de studentenadministratie voor hulp.",
+        "tags": ["BUKU", "inloggen", "account", "studentenadministratie"]
+    },
+    {
+        "id": "rooster_bekijken",
+        "question": "Waar kan ik mijn rooster bekijken?",
+        "answer": "Je rooster is beschikbaar via het studentenportaal of Trajectplanner.",
+        "tags": ["rooster", "bekijken", "portaal", "trajectplanner", "schema"]
+    },
+
+    # =========================
+    # 🏛️ STUDENTENADMINISTRATIE
+    # =========================
+
+    {
+        "id": "studentenadministratie_openingstijden",
+        "question": "Wat zijn de openingstijden van de studentenadministratie?",
+        "answer": "De studentenadministratie is open van maandag t/m vrijdag van 08:00 tot 16:00. In het weekend zijn ze gesloten.",
+        "tags": ["openingstijden", "studentenadministratie", "uren", "weekend"]
+    },
+    {
+        "id": "studie_onderbreken",
+        "question": "Hoe kan ik mijn studie tijdelijk onderbreken of stopzetten?",
+        "answer": "Dit moet je officieel aanvragen via de studentenadministratie. Neem contact met hen op om de procedure te starten.",
+        "tags": ["studie", "onderbreken", "stopzetten", "pauzeren", "uitschrijven"]
+    },
+    {
+        "id": "gegevens_wijzigen",
+        "question": "Hoe wijzig ik mijn persoonlijke gegevens zoals adres of e-mailadres?",
+        "answer": "Stuur een e-mail naar de studentenadministratie met je verzoek. Zij zullen je verder helpen.",
+        "tags": ["gegevens", "wijzigen", "adres", "email", "telefoonnummer"]
+    },
+    {
+        "id": "aanwezigheid_regels",
+        "question": "Wat zijn de regels rondom aanwezigheid?",
+        "answer": "De aanwezigheids- en absentieregels staan beschreven in de onderwijs- en examenregeling (OER). Vraag dit op bij de studentenadministratie of kijk in je studiegids.",
+        "tags": ["aanwezigheid", "absentie", "regels", "OER"]
+    },
+    {
+        "id": "studiebegeleider_contact",
+        "question": "Hoe kan ik contact opnemen met mijn studiebegeleider?",
+        "answer": "De naam van je studiebegeleider kun je opvragen bij de studentenadministratie. Daarna kun je per e-mail contact opnemen.",
+        "tags": ["studiebegeleider", "contact", "naam", "studentenadministratie"]
+    },
+
+    # =========================
+    # 🎓 VRIJSTELLINGEN & AFSTUDEREN
     # =========================
 
     {
         "id": "vrijstelling_aanvragen",
-        "question": "Hoe vraag ik vrijstelling aan?",
-        "answer": "Je dient een schriftelijk gemotiveerd verzoek in bij de examencommissie, samen met je getuigschrift of bewijsstukken en een ingevuld aanvraagformulier. Stuur dit per e-mail naar de examencommissie. De commissie beslist binnen 4 weken.",
-        "tags": ["vrijstelling", "aanvragen", "examencommissie"]
+        "question": "Hoe vraag ik vrijstelling aan voor een vak?",
+        "answer": "Dien een schriftelijk verzoek in bij de examencommissie, samen met je bewijsstukken en het aanvraagformulier. Stuur dit per e-mail. De commissie beslist binnen 4 weken.",
+        "tags": ["vrijstelling", "aanvragen", "examencommissie", "vak"]
     },
     {
-        "id": "vrijstelling_gronden",
-        "question": "Op welke gronden kan ik vrijstelling krijgen?",
-        "answer": "Vrijstelling kan worden verleend op basis van: een eerder behaald getuigschrift op vergelijkbaar niveau, eerder behaalde toetsresultaten in het hoger onderwijs, of bewijzen van verworven competenties opgedaan buiten het hoger onderwijs.",
-        "tags": ["vrijstelling", "gronden", "eerder behaald"]
-    },
-    {
-        "id": "vrijstelling_meegerekend",
+        "id": "vrijstelling_gemiddelde",
         "question": "Tellen vrijgestelde vakken mee in mijn gemiddelde?",
-        "answer": "Nee. Vrijgestelde onderwijseenheden worden weergegeven als 'vrijstelling' en tellen niet mee voor het berekenen van een eindcijfer of gemiddelde.",
-        "tags": ["vrijstelling", "gemiddelde", "eindcijfer"]
+        "answer": "Nee, vrijgestelde vakken worden weergegeven als 'vrijstelling' en tellen niet mee voor je eindcijfer of gemiddelde.",
+        "tags": ["vrijstelling", "gemiddelde", "eindcijfer", "meegerekend"]
     },
     {
-        "id": "studiepunten_geldigheid",
-        "question": "Hoe lang zijn mijn studieresultaten geldig?",
-        "answer": "Een behaald propedeuse- of afsluitend examen is onbeperkt geldig. Bij een studieonderbreking kun je schriftelijk bij de examencommissie vragen of eerder behaalde resultaten nog geldig zijn.",
-        "tags": ["geldigheid", "studieresultaten", "onderbreking"]
+        "id": "diploma_behalen",
+        "question": "Wanneer heb ik mijn bachelor-diploma behaald?",
+        "answer": "Je hebt je diploma behaald als alle vakken van de propedeuse én de postpropedeuse zijn afgerond. Het afsluitend examen kan pas worden behaald nadat ook het propedeuse-examen is behaald.",
+        "tags": ["diploma", "bachelor", "afstuderen", "klaar"]
     },
     {
-        "id": "tentamen_bewaring",
-        "question": "Hoe lang worden mijn tentamenwerken bewaard?",
-        "answer": "Afgelegde toetsen en beoordelingsnormen worden bewaard gedurende 6 jaar na de datum van dagtekening van het bewijsstuk.",
-        "tags": ["bewaring", "tentamen", "archief", "jaren"]
+        "id": "graad_na_afstuderen",
+        "question": "Welke titel ontvang ik na afstuderen?",
+        "answer": "Na afstuderen ontvang je de graad Bachelor in Management & Economics of Bachelor in ICT. Je mag de titel BBA (Bachelor of Business Administration) voeren.",
+        "tags": ["titel", "graad", "BBA", "bachelor", "afstuderen"]
+    },
+    {
+        "id": "cum_laude",
+        "question": "Wanneer studeer ik cum laude af?",
+        "answer": "Je studeert cum laude af als je de opleiding in maximaal 4 jaar hebt afgerond, maximaal 30 EC aan vrijstellingen hebt, een gemiddelde van minimaal 8,0 hebt en alle toetsen minimaal een 7,0.",
+        "tags": ["cum laude", "gemiddelde", "8.0", "afstuderen", "onderscheiding"]
     },
 
     # =========================
@@ -311,125 +423,67 @@ FAQ_ENTRIES = [
     # =========================
 
     {
-        "id": "fraude_definitie",
-        "question": "Wat is de definitie van fraude bij UNASAT?",
-        "answer": "Fraude is elke handeling of nalatigheid van een student waardoor een juist oordeel over zijn kennis, inzicht en vaardigheden geheel of gedeeltelijk onmogelijk wordt gemaakt.",
-        "tags": ["fraude", "definitie", "regels"]
+        "id": "fraude_wat_is_het",
+        "question": "Wat wordt er beschouwd als fraude bij UNASAT?",
+        "answer": "Fraude is alles waardoor een eerlijk oordeel over jouw kennis of vaardigheden onmogelijk wordt. Denk aan spieken, het gebruik van niet-toegestane hulpmiddelen, werk overnemen van een medestudent, of je voordoen als iemand anders.",
+        "tags": ["fraude", "definitie", "spieken", "regels"]
     },
     {
-        "id": "fraude_voorbeelden",
-        "question": "Wat valt er onder fraude?",
-        "answer": "Fraude omvat onder andere: spieken, gebruik van niet-toegestane hulpmiddelen, antwoorden overnemen van een medestudent, je uitgeven voor iemand anders, en bij online tentamens: samenwerken of gebruik van niet-toegestane programma's.",
-        "tags": ["fraude", "spieken", "voorbeelden"]
-    },
-    {
-        "id": "plagiaat_definitie",
+        "id": "plagiaat_wat_is_het",
         "question": "Wat is plagiaat?",
-        "answer": "Plagiaat is het overnemen van tekst, ideeën of werk van anderen zonder bronvermelding. Dit omvat knippen en plakken, vertalen zonder verwijzing, parafraseren zonder bronvermelding, of een werkstuk kopen of laten schrijven door iemand anders.",
-        "tags": ["plagiaat", "bronvermelding", "definitie"]
+        "answer": "Plagiaat is het overnemen van tekst, ideeën of werk van anderen zonder bronvermelding. Dit geldt ook voor vertalen, parafraseren zonder verwijzing, of een werkstuk door iemand anders laten schrijven.",
+        "tags": ["plagiaat", "bronvermelding", "tekst", "kopiëren"]
     },
     {
         "id": "fraude_sancties",
-        "question": "Wat zijn de sancties bij fraude?",
-        "answer": "De examencommissie kan: het tentamen ongeldig verklaren, je uitsluiten van alle tentamens voor maximaal 3 opeenvolgende tentamenperioden, of alle tentamenresultaten van dat semester ongeldig verklaren.",
-        "tags": ["fraude", "sanctie", "straf", "uitsluiting"]
-    },
-    {
-        "id": "fraude_herhaling",
-        "question": "Wat gebeurt er bij herhaling van fraude?",
-        "answer": "Bij herhaling vervallen alle resultaten van de betreffende fase en wordt de student voorgedragen voor onmiddellijke uitschrijving. Je mag je gedurende 5 jaar niet opnieuw inschrijven bij UNASAT.",
-        "tags": ["fraude", "herhaling", "uitschrijving", "5 jaar"]
-    },
-    {
-        "id": "plagiaat_sanctie",
-        "question": "Wat zijn de sancties bij plagiaat?",
-        "answer": "Het product (werkstuk, scriptie etc.) wordt volledig ongeldig verklaard. Je moet daarna 1 jaar wachten voordat je opnieuw aan dat product mag beginnen.",
-        "tags": ["plagiaat", "sanctie", "ongeldig", "1 jaar"]
+        "question": "Wat zijn de gevolgen van fraude?",
+        "answer": "De examencommissie kan je tentamen ongeldig verklaren, je uitsluiten van tentamens voor maximaal 3 periodes, of alle resultaten van dat semester ongeldig verklaren. Bij herhaling kun je worden uitgeschreven en 5 jaar lang niet herinschrijven.",
+        "tags": ["fraude", "sanctie", "gevolgen", "uitsluiting", "uitschrijven"]
     },
 
     # =========================
-    # 📈 DOORSTROOM & BEGELEIDING
-    # =========================
-
-    {
-        "id": "doorstroom_naar_postpropedeuse",
-        "question": "Wanneer mag ik doorstromen van de propedeuse naar de postpropedeuse?",
-        "answer": "Je mag doorstromen als je het propedeuse-examen volledig hebt behaald, of als je minimaal 50 EC hebt behaald in de propedeuse fase. De opleidingscoördinator stelt dit vast aan het einde van het eerste studiejaar.",
-        "tags": ["doorstroom", "propedeuse", "50 ec", "postpropedeuse"]
-    },
-    {
-        "id": "studiebegeleiding_recht",
-        "question": "Heb ik recht op studiebegeleiding?",
-        "answer": "Ja. UNASAT biedt elke student studiebegeleiding aan, mede voor oriëntatie op mogelijke studiewegen. Je kunt je wenden tot je studiebegeleider voor problemen die je studievoortgang belemmeren.",
-        "tags": ["studiebegeleiding", "recht", "begeleider"]
-    },
-    {
-        "id": "studieadvies_bindend",
-        "question": "Is het studieadvies van mijn begeleider bindend?",
-        "answer": "Ja. Als je studievoortgang stagneert, brengt de studiebegeleider advies uit. Dit studieadvies heeft een bindend karakter.",
-        "tags": ["studieadvies", "bindend", "begeleider"]
-    },
-
-    # =========================
-    # ⚖️ BEZWAAR & BEROEP
+    # ⚖️ BEZWAAR & KLACHTEN
     # =========================
 
     {
         "id": "bezwaar_examencommissie",
         "question": "Ik ben het niet eens met een besluit van de examencommissie. Wat kan ik doen?",
-        "answer": "Je kunt binnen 2 weken schriftelijk bezwaar aantekenen bij de examencommissie. Het bezwaar moet beargumenteerd zijn. Je kunt ook worden uitgenodigd om je bezwaar mondeling toe te lichten.",
-        "tags": ["bezwaar", "examencommissie", "2 weken"]
+        "answer": "Je kunt binnen 2 weken schriftelijk bezwaar aantekenen bij de examencommissie. Onderbouw je bezwaar goed. Je kunt ook worden uitgenodigd om het mondeling toe te lichten.",
+        "tags": ["bezwaar", "examencommissie", "2 weken", "besluit", "klacht"]
     },
     {
         "id": "beroep_directeur",
-        "question": "Mijn bezwaar bij de examencommissie is afgewezen. Wat nu?",
-        "answer": "Als het besluit na bezwaar ongewijzigd blijft, kun je binnen 2 weken beroep aantekenen bij de directeur. Dit is mogelijk voor besluiten over doorstroom, vrijstellingen, toegang tot tentamens en toelating.",
+        "question": "Mijn bezwaar is afgewezen. Kan ik nog in beroep gaan?",
+        "answer": "Ja. Als de examencommissie je bezwaar afwijst, kun je binnen 2 weken in beroep gaan bij de directeur.",
         "tags": ["beroep", "directeur", "bezwaar", "afgewezen"]
     },
 
     # =========================
-    # 🎓 AFSTUDEREN & STAGE
+    # ℹ️ ALGEMENE INFO
     # =========================
 
     {
-        "id": "stage_onderdelen",
-        "question": "Uit welke onderdelen bestaat de stage (semester 7)?",
-        "answer": "De stage bestaat uit: Stage activiteit en verslag (9 EC) individueel, en Ontwikkelassessment/competentieportfolio (9 EC) individueel. Totaal: 18 EC.",
-        "tags": ["stage", "semester 7", "ec", "portfolio"]
+        "id": "studiejaar_periode",
+        "question": "Wanneer begint en eindigt het studiejaar?",
+        "answer": "Het studiejaar loopt van 1 november tot 31 oktober van het volgende jaar.",
+        "tags": ["studiejaar", "start", "einde", "datum", "periode"]
     },
     {
-        "id": "afstuderen_onderdelen",
-        "question": "Uit welke onderdelen bestaat het afstuderen (semester 8)?",
-        "answer": "Het afstuderen bestaat uit: Afstudeerverslag (9 EC), Afstudeergesprek (9 EC) en Eindassessment competenties (12 EC). Totaal: 30 EC.",
-        "tags": ["afstuderen", "semester 8", "verslag", "gesprek"]
-    },
-
-    # =========================
-    # 🏛️ EXAMENCOMMISSIE
-    # =========================
-
-    {
-        "id": "examencommissie_rol",
-        "question": "Wat is de rol van de examencommissie?",
-        "answer": "De examencommissie is het officiële orgaan dat vaststelt of een student voldoet aan de voorwaarden voor het verkrijgen van een graad. De commissie behandelt ook vrijstellingen, klachten, fraude en bezwaren.",
-        "tags": ["examencommissie", "rol", "taken"]
+        "id": "opleiding_deeltijd",
+        "question": "Is de opleiding fulltime of deeltijd?",
+        "answer": "De opleiding bij UNASAT is deeltijds ingericht.",
+        "tags": ["deeltijd", "fulltime", "opleiding", "tijdsinvestering"]
     },
     {
-        "id": "examencommissie_termijn",
-        "question": "Binnen welke termijn beslist de examencommissie op mijn verzoek?",
-        "answer": "De examencommissie neemt binnen 4 weken een besluit. Bij zwaarwegende omstandigheden kan hiervan worden afgeweken; je wordt dan geïnformeerd over de langere termijn.",
-        "tags": ["examencommissie", "termijn", "4 weken", "besluit"]
+        "id": "onderwijstaal",
+        "question": "In welke taal wordt er les gegeven?",
+        "answer": "Het onderwijs wordt gegeven in het Nederlands en/of Engels. Bij gastcolleges of speciale vakken kan dit afwijken.",
+        "tags": ["taal", "Nederlands", "Engels", "les", "college"]
     },
-
-    # =========================
-    # 💼 COMPETENTIES
-    # =========================
-
     {
-        "id": "competenties_opleiding",
-        "question": "Welke competenties moet ik hebben na het afstuderen?",
-        "answer": "Na het afstuderen beschik je over 9 competenties: Vakkundigheid, Innovatief vermogen, Resultaatgerichtheid, Ondernemend gedrag, Besluitvaardigheid, Communiceren, Samenwerken, Klantgerichtheid en Ontwikkelingsgerichtheid.",
-        "tags": ["competenties", "afstuderen", "hbo"]
+        "id": "contact_algemeen",
+        "question": "Hoe neem ik contact op met UNASAT?",
+        "answer": "Voor algemene vragen kun je contact opnemen via info@unasat.sr. Voor specifieke zaken: cijferadministratie@unasat.sr voor cijfers, of de studentenadministratie voor inschrijvingen en persoonlijke zaken.",
+        "tags": ["contact", "email", "info", "administratie", "bereikbaar"]
     },
-
 ]

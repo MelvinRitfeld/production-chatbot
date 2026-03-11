@@ -6,17 +6,35 @@ from app.data.answer_bank import FAQ_ENTRIES
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-SYSTEM_PROMPT = """Je bent een behulpzame studentenassistent van UNASAT (Universiteit van Suriname).
+# ──  FAQ referentie for the LLM ────────────────────────────────
+def _build_faq_context() -> str:
+    lines = ["Beschikbare FAQ-antwoorden (gebruik deze als referentie):"]
+    for entry in FAQ_ENTRIES:
+        q = entry.get("question", "")
+        a = entry.get("answer", "")
+        if q and a:
+            lines.append(f"- V: {q}\n  A: {a}")
+    return "\n".join(lines)
+
+FAQ_CONTEXT = _build_faq_context()
+
+SYSTEM_PROMPT = f"""Je bent een behulpzame studentenassistent van UNASAT (Universiteit van Suriname).
 Je helpt studenten met vragen over inschrijving, roosters, toetsen, studiebegeleiding,
 Microsoft Teams, OneDrive, SHL en algemene campusinformatie.
 
+{FAQ_CONTEXT}
+
 Regels:
 - Detecteer de taal van de student en antwoord in diezelfde taal (Nederlands, Engels of Sranantongo)
-- Wees kort en duidelijk (max 3 zinnen)
+- Geef een duidelijk en volledig antwoord (max 6 zinnen)
+- Gebruik de FAQ hierboven als referentie waar van toepassing
 - Als je het antwoord niet zeker weet, verwijs naar info@unasat.sr
 - Verzin geen informatie over specifieke data, bedragen of namen
 - Blijf altijd vriendelijk en professioneel
 - Gebruik de gespreksgeschiedenis om context te begrijpen"""
+
+# ── Charcter limit ───────────────────────────────────────────────────────────
+MAX_INPUT_CHARS = 500
 
 
 class FAQService:
@@ -128,7 +146,7 @@ class FAQService:
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=messages,
-                max_tokens=200,
+                max_tokens=500,       # was 200 — raised for fuller answers
                 temperature=0.5,
             )
             return response.choices[0].message.content.strip()
@@ -138,6 +156,16 @@ class FAQService:
     # 7) Main entry point
     def get_answer(self, user_input: str, history: list = None) -> Tuple[str, str, List[str]]:
         """Returns (answer, source, suggestions)"""
+
+        # Character limit check
+        if len(user_input) > MAX_INPUT_CHARS:
+            return (
+                f"Je bericht is te lang (max {MAX_INPUT_CHARS} tekens). "
+                "Probeer je vraag korter te formuleren.",
+                "error",
+                [],
+            )
+
         match, score = self.find_best_match(user_input)
         if match:
             return match["answer"], "faq", []
