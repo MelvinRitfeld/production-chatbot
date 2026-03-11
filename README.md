@@ -18,6 +18,21 @@ A production-ready AI chatbot for UNASAT (Universiteit van Suriname) students. A
 
 ---
 
+## Documentation
+
+All project documentation is available in the `/docs` folder:
+
+| Document | Description |
+|---|---|
+| [Architecture](docs/Architectuur_Document.pdf) | System design, components, data flows, cost estimate |
+| [Deployment Plan](docs/Implementatie_Deploymentplan.pdf) | Step-by-step deployment & rollback procedures |
+| [Prompt Engineering](docs/Prompt_Engineering.pdf) | Prompt design, ecosystem analysis, iteration cycles |
+| [Monitoring](docs/monitoring.md) | Metrics, logging setup, improvement cycle |
+| [Security & Privacy](docs/security_privacy.md) | Injection detection, PII redaction, rate limiting, AVG compliance |
+| [User Test Report](docs/user_test_report.md) | Test results, user feedback, resolved issues |
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -51,7 +66,6 @@ chmod +x setup.sh && ./setup.sh
 The script will check Docker, create your `.env`, ask for your API key and start everything automatically.
 
 ### Option 2 — Manual setup
-
 ```bash
 git clone https://github.com/MelvinRitfeld/production-chatbot
 cd production-chatbot
@@ -80,7 +94,6 @@ Get a free Groq API key at: https://console.groq.com
 ---
 
 ## Project Structure
-
 ```
 production-chatbot/
 ├── setup.ps1                  # Automated setup (Windows)
@@ -132,7 +145,6 @@ production-chatbot/
 ---
 
 ## Stopping the chatbot
-
 ```bash
 # Stop containers
 docker compose down
@@ -154,5 +166,5 @@ Make sure `DATABASE_URL` in `backend/.env` uses `@db:5432` not `@localhost:5432`
 **Port already in use**
 Stop other services on ports 3000, 8000 or 5432, then retry.
 
-**LLM answers are in English**
-The system prompt instructs the model to match the student's language. If it switches, try rephrasing in Dutch.
+**LLM answers are in the wrong language**
+The system prompt instructs the model to match the student's language (Dutch, English or Sranantongo). If responses seem off, check that your GROQ_API_KEY is valid and the backend started correctly.
