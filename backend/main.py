@@ -16,7 +16,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
     "http://localhost:3000",
-    "https://renewed-recreation-production-2702.up.railway.app/",],
+    "https://renewed-recreation-production-a5fa.up.railway.app/",],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
