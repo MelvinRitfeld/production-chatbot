@@ -1,18 +1,20 @@
-# Deployment Documentation
+# Deployment Documentatie
 
 ## Overview
 
-The UNASAT Campus Support Chatbot is fully containerized using Docker Compose. All services (frontend, backend, database) start with a single command. No manual configuration of individual services is required.
+De UNASAT Campus Support Chatbot draait volledig in Docker-containers met behulp van Docker Compose.
+Alle services (frontend, backend en database) kunnen met één commando worden gestart.
+Handmatige configuratie van afzonderlijke services is niet nodig.
 
 ---
 
 ## Requirements
 
-| Requirement | Version |
+| Requirement | Versie |
 |---|---|
 | Docker Desktop | 4.0+ |
 | Git | Any |
-| Groq API key | Free at console.groq.com |
+| Groq API Key | Gratis te verkrijgen via console.groq.com |
 
 ---
 
@@ -32,15 +34,15 @@ cd production-chatbot
 chmod +x setup.sh && ./setup.sh
 ```
 
-The setup script:
-1. Checks if Docker is installed and running
-2. Creates `backend/.env` from `backend/.env.example`
-3. Prompts for the GROQ_API_KEY
-4. Validates the key is filled in
-5. Runs `docker compose up --build -d`
-6. Prints all access URLs when done
+Het installatiescript voert de volgende stappen uit:
+1. Controleert of Docker is geïnstalleerd en actief is
+2. Maakt het bestand `backend/.env` aan op basis van `backend/.env.example`
+3. Vraagt om de `GROQ_API_KEY` (Prompting)
+4. Controleert of de key is ingevuld
+5. Voert het commando `docker compose up --build -d` uit
+6. Toont alle toegang-URL’s wanneer de installatie voltooid is
 
-Total setup time: under 15 minutes on first run.
+Total setup time: meestal minder dan 15 minuten bij de eerste uitvoering.
 
 ---
 
@@ -56,47 +58,48 @@ docker compose up --build
 
 ## Environment Variables
 
-All secrets are stored in `backend/.env` which is excluded from git via `.gitignore`.
+Alle gevoelige gegevens worden opgeslagen in `backend/.env.`
+Dit bestand is uitgesloten van Git via `.gitignore.`
 
-| Variable | Description | Example |
+| Variabele | Beschrijving | Voorbeeld |
 |---|---|---|
-| `GROQ_API_KEY` | Groq API key for LLM access | `gsk_...` |
+| `GROQ_API_KEY` | Groq API key voor toegang tot het LLM | `gsk_...` |
 | `DATABASE_URL` | PostgreSQL connection string | `postgresql+psycopg2://app:app@db:5432/app` |
 
-The `backend/.env.example` file contains safe placeholder values and is committed to git as a template.
+Het bestand `backend/.env.example` bevat voorbeeldwaarden en wordt als template in Git opgeslagen.
 
 ---
 
 ## Services
 
-| Service | Port | Description |
+| Service | Port | Beschrijving |
 |---|---|---|
-| frontend | 3000 | Next.js chat interface |
+| frontend | 3000 | Next.js chatinterface |
 | backend | 8000 | FastAPI REST API |
 | db | 5432 | PostgreSQL 16 database |
 
-The backend waits for the database to be healthy before starting (via `depends_on: condition: service_healthy`). The frontend waits for the backend.
+De backend wacht totdat de database actief is voordat deze start (via `depends_on: condition: service_healthy`). De frontend wacht totdat de backend beschikbaar is.
 
 ---
 
-## Access URLs
+## Toegang-URL's
 
-| URL | Description |
+| URL | Beschrijving |
 |---|---|
-| http://localhost:3000 | Chatbot interface |
+| http://localhost:3000 | Chatbot gebruikersinterface |
 | http://localhost:3000/admin | Admin dashboard |
-| http://localhost:8000/docs | Interactive API docs |
-| http://localhost:8000/health | Health check endpoint |
+| http://localhost:8000/docs | Interactieve API-documentatie |
+| http://localhost:8000/health | Health-check endpoint |
 
 ---
 
-## Stopping
+## Stoppen van het systeem
 
 ```bash
-# Stop without deleting data
+# Stoppen zonder data te verwijderen
 docker compose down
 
-# Stop and delete all data (full reset)
+# Stoppen en alle data verwijderen (volledige reset)
 docker compose down -v
 ```
 
@@ -105,10 +108,10 @@ docker compose down -v
 ## Troubleshooting
 
 **`connection refused` on backend**
-Ensure `DATABASE_URL` uses `@db:5432` not `@localhost:5432` inside Docker.
+Zorg ervoor dat `DATABASE_URL` `@db:5432` gebruikt en niet `@localhost:5432` wanneer Docker wordt gebruikt.
 
 **`GROQ_API_KEY` missing**
-Check `backend/.env` exists and the key is set. The `.env.example` contains placeholder values only.
+Controleer of `backend/.env` bestaat en of de sleutel is ingesteld. Het bestand `.env.example` bevat alleen plaatsaanduidingen.
 
 **Port conflict**
-Stop any services running on ports 3000, 8000 or 5432 before starting.
+Stop eventuele services die al gebruik maken van poorten 3000, 8000 of 5432 voordat het systeem wordt gestart.

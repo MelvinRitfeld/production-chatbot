@@ -32,7 +32,7 @@
 
 ## 1. Systeemoverzicht & Architectuurdiagram
 
-Het systeem betreft een hybride FAQ-chatbot die speciaal is ontworpen voor studenten. Het combineert een razendsnelle, statische FAQ-kennisbank met een Large Language Model (LLM) dat dient als intelligente fallback voor complexere vragen.
+Het systeem is een hybride FAQ-chatbot voor studenten. Het combineert een statische FAQ-kennisbank met een Large Language Model (LLM). Wanneer een vraag niet in de FAQ staat, wordt het LLM gebruikt om alsnog een antwoord te geven.
 
 ### Architectuurdiagram (Flow)
 
@@ -64,18 +64,18 @@ Hieronder is de datastroom visueel weergegeven, van de student tot aan de onderl
 
 ## 2. Gebruikte Componenten
 
-**Frontend:** De frontend, gebouwd met Next.js 14, fungeert als de visuele schil van de applicatie. Het biedt studenten een toegankelijke chatinterface om vragen te stellen. Daarnaast bevat het een administratief dashboard dat inzicht geeft in prestatie-indicatoren, zoals gemiddelde latentie, succespercentages en de verhouding tussen FAQ- en LLM-antwoorden. Communicatie met de backend verloopt via REST-API calls naar FastAPI.
+**Frontend:** De frontend is gebouwd met Next.js 14 en vormt de gebruikersinterface van de applicatie. Studenten kunnen via deze interface vragen stellen aan de chatbot. Daarnaast bevat het een administratief dashboard dat inzicht geeft in prestatie-indicatoren, zoals gemiddelde latentie, succespercentages en de verhouding tussen FAQ- en LLM-antwoorden. Communicatie met de backend verloopt via REST-API calls naar FastAPI.
 
-**Backend:** De kernlogica van de chatbot bevindt zich in de FastAPI-backend. Bij een inkomende vraag splitst het systeem deze op in woorden en verwijdert het de algemene Nederlandse stopwoorden. Vervolgens berekent het een match-score ten opzichte van de FAQ-database, waarbij specifieke 'tags' extra zwaar wegen. Pas als deze score onder de drempelwaarde van 4 valt, wordt de vraag als fallback naar de Groq LLM API gestuurd. Dit minimaliseert onnodige API-aanroepen.
+**Backend:** De belangrijkste logica van de chatbot zit in de FastAPI-backend. Bij een inkomende vraag splitst het systeem deze op in woorden en verwijdert het de algemene Nederlandse stopwoorden. Vervolgens berekent het een match-score ten opzichte van de FAQ-database, waarbij specifieke 'tags' extra zwaar wegen. Pas als deze score onder de drempelwaarde van 4 valt, wordt de vraag als fallback naar de Groq LLM API gestuurd. Hierdoor worden onnodige API-aanroepen voorkomen.
 
 **Database:** De PostgreSQL-database beheert drie cruciale tabellen:
 - `conversations`: Slaat de unieke chatsessies van gebruikers op.
 - `messages`: Bewaart individuele berichten inclusief timestamps en de bron van het antwoord (FAQ of AI).
 - `request_logs`: Registreert technische metadata zoals responstijden, statuscodes en tokengebruik ten behoeve van het admin-dashboard.
 
-**LLM API:** Groq Cloud fungeert als het generatieve brein voor vragen die buiten de FAQ vallen, gebruikmakend van het llama-3.3-70b-versatile model om snel en accuraat complexe vragen te beantwoorden.
+**LLM API:** Groq Cloud wordt gebruikt om antwoorden te genereren wanneer een vraag niet in de FAQ staat, gebruikmakend van het llama-3.3-70b-versatile model om snel en accuraat complexe vragen te beantwoorden.
 
-**Containerisatie:** Alle services draaien in geïsoleerde Docker-containers, gedefinieerd in een `docker-compose.yml` bestand. Met één simpel commando (`docker compose up --build`) wordt de volledige stack gestart. De interne communicatie verloopt via een Docker-netwerk, waarbij enkel poort 3000 (Frontend) en 8000 (Backend) extern bereikbaar zijn gesteld.
+**Containerisatie:** Alle services draaien in geïsoleerde Docker-containers, gedefinieerd in een `docker-compose.yml` bestand. Met het commando (`docker compose up --build`) kunnen alle onderdelen van het systeem tegelijk worden gestart. De interne communicatie verloopt via een Docker-netwerk, waarbij enkel poort 3000 (Frontend) en 8000 (Backend) extern bereikbaar zijn gesteld.
 
 
 
@@ -99,7 +99,7 @@ Hieronder is de datastroom visueel weergegeven, van de student tot aan de onderl
 
 - **Reproduceerbaarheid:** Elke ontwikkelaar kan via één commando exact dezelfde stack lokaal opstarten.
 - **Isolatie:** Het voorkomt conflicten tussen configuraties van Python, Node.js of PostgreSQL op het host-systeem.
-- **Schaalbaarheid:** De containers zijn eenvoudig horizontaal te repliceren of te migreren naar orkestratiesystemen zoals Kubernetes.
+- **Schaalbaarheid:** Containers kunnen later eenvoudig meerdere keren worden gestart of worden verplaatst naar systemen zoals Kubernetes.
 
 
 ---
@@ -138,11 +138,11 @@ Hieronder is het stapsgewijze verloop van een chatbericht uitgewerkt:
 
 ## 6. Schaalbaarheid
 
-De huidige Docker Compose architectuur is ruim voldoende voor tientallen gelijktijdige gebruikers. Bottlenecks bevinden zich voornamelijk bij de limieten van de externe Groq API en het aantal gelijktijdige PostgreSQL-connecties.
+De huidige Docker Compose architectuur is ruim voldoende voor tientallen gelijktijdige gebruikers. Mogelijke beperkingen liggen vooral bij de limieten van de Groq API en het aantal gelijktijdige PostgreSQL-connecties.
 
 Om horizontaal te schalen, kunnen er meerdere stateless backend-instanties achter een load balancer geplaatst worden. Read-replica's kunnen worden ingezet om zware admin-dashboard queries op te vangen en de frontend kan via een Content Delivery Network (CDN) worden verspreid voor nog lagere latenties.
 
-Verticale schaalbaarheid is mogelijk door te upgraden naar een betaald Groq-plan (voor hogere tokenlimieten) en door connection pooling toe te passen op de PostgreSQL-database. Tot slot kunnen de gebruikte Docker-images zonder wijzigingen in de code worden gemigreerd naar Kubernetes om automatische schaalvergroting (Horizontal Pod Autoscaler) te faciliteren.
+Verticale schaalbaarheid is mogelijk door te upgraden naar een betaald Groq-plan (voor hogere tokenlimieten) en door connection pooling toe te passen op de PostgreSQL-database. Tot slot kunnen de gebruikte Docker-images zonder dat de code aangepast hoeft te worden, worden gemigreerd naar Kubernetes om automatische schaalvergroting (Horizontal Pod Autoscaler) te faciliteren.
 
 
 ---

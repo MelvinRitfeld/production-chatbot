@@ -1,8 +1,8 @@
-# Monitoring Documentation
+# Monitoring Documentatie
 
-## Overview
+## Overzicht
 
-The chatbot includes built-in monitoring through structured request logging and a real-time admin dashboard. All conversations, messages and API requests are stored in PostgreSQL and accessible via the admin interface.
+De chatbot bevat ingebouwde monitoring via gestructureerde logging van verzoeken en een realtime admin-dashboard. Alle gesprekken, berichten en API-aanroepen worden opgeslagen in PostgreSQL en zijn toegankelijk via de admininterface.
 
 ---
 
@@ -10,99 +10,119 @@ The chatbot includes built-in monitoring through structured request logging and 
 
 **URL:** http://localhost:3000/admin
 
-The dashboard provides a live overview of system performance including:
+Het dashboard geeft een live overzicht van de prestaties van het systeem, waaronder:
 
-| Metric | Description |
+| Metric | Beschrijving |
 |---|---|
-| Total conversations | Number of unique chat sessions started |
-| Total messages | Total user + assistant messages exchanged |
-| Average latency | Mean response time across all requests (ms) |
-| Success rate | Percentage of requests that completed without error |
-| FAQ match rate | Percentage of questions answered by FAQ vs LLM |
-| FAQ matches | Total questions answered directly from knowledge base |
-| Error count | Total failed requests |
-| Recent request logs | Last 20 API calls with status, latency and endpoint |
+| Totaal aantal gesprekken | Aantal unieke chatsessies dat is gestart |
+| Totaal aantal berichten | Totaal aantal berichten van gebruiker en chatbot |
+| Gemiddelde responstijd | Gemiddelde responstijd van alle verzoeken (ms) |
+| Succespercentage | Percentage verzoeken dat zonder fout is afgerond |
+| FAQ-matchpercentage | Percentage vragen dat door de FAQ wordt beantwoord versus het LLM |
+| Aantal FAQ-matches | Totaal aantal vragen dat direct uit de kennisbank is beantwoord |
+| Aantal fouten | Totaal aantal mislukte verzoeken |
+| Recente request-logs | Laatste 20 API-aanroepen met status, responstijd en endpoint |
 
 ---
 
-## What Gets Logged
+## Wat wordt gelogd
 
-### Conversations (`conversations` table)
-Every new chat session creates a conversation record with a unique UUID and timestamp.
+### Conversations (`conversations` tabel)
 
-### Messages (`messages` table)
-Every user and assistant message is stored with:
+Elke nieuwe chatsessie maakt een record aan in de tabel `conversations` met een unieke UUID en een tijdstempel.
+
+### Messages (`messages` tabel)
+
+Elk bericht van de gebruiker en de chatbot wordt opgeslagen met:
+
 - Conversation ID
-- Role (user / assistant)
-- Content (PII-redacted if applicable)
-- Timestamp
+- Rol (user / assistant)
+- Inhoud (persoonlijke informatie wordt indien nodig verwijderd)
+- Tijdstempel
 
-### Request logs (`request_logs` table)
-Every API call to `/api/chat` is logged with:
+### Request logs (`request_logs` tabel)
+
+Elke API-aanroep naar `/api/chat` wordt gelogd met:
+
 - Endpoint
-- HTTP status code
-- Latency in milliseconds
-- Error message (if any)
-- Source (`faq` or `llm`)
-- FAQ match ID and score (if matched)
-- User input (for unmatched question analysis)
+- HTTP statuscode
+- Responstijd in milliseconden
+- Foutmelding (indien aanwezig)
+- Bron (`faq` of `llm`)
+- FAQ match ID en score (indien er een match is)
+- Gebruikersvraag (voor analyse van vragen zonder match)
 
-### Feedback (`feedback` table)
-Every 👍👎 rating submitted by a student is stored with:
+### Feedback (`feedback` tabel)
+
+Elke 👍👎 beoordeling van een student wordt opgeslagen met:
+
 - Conversation ID
 - Message ID
-- Rating (1 = positive, -1 = negative)
-- Optional comment
+- Beoordeling (1 = positief, -1 = negatief)
+- Optionele opmerking
 
 ---
 
-## Key Metrics Analysis
+## Analyse van belangrijke metrics
 
-### FAQ match rate
-A high FAQ match rate (>60%) indicates the knowledge base is well-aligned with what students actually ask. A low rate indicates the FAQ needs expansion.
+### FAQ matchpercentage
 
-**Current action:** Monitor unmatched questions in request logs weekly and add new FAQ entries for recurring topics.
+Een hoog FAQ-matchpercentage (>60%) betekent dat de kennisbank goed aansluit bij de vragen die studenten stellen.  
+Een laag percentage betekent dat de FAQ moet worden uitgebreid.
 
-### Average latency
-- FAQ responses: typically <20ms
-- LLM responses: typically 400–1500ms depending on Groq API load
-
-**Threshold:** If average latency exceeds 2000ms consistently, consider caching frequent LLM responses or expanding the FAQ.
-
-### Error rate
-Any error rate above 2% warrants investigation. Common causes:
-- Groq API key expired or rate limited
-- Database connection issues
-- Invalid request payloads
-
-### Feedback ratings
-A negative feedback rate above 20% signals quality issues. Cross-reference with the source field to determine whether FAQ answers or LLM answers are underperforming.
+**Huidige actie:**  
+Controleer wekelijks vragen zonder match in de request-logs en voeg nieuwe FAQ-items toe voor onderwerpen die vaak terugkomen.
 
 ---
 
-## Verbeteracties (Improvement Actions)
+### Gemiddelde responstijd
 
-Based on what the monitoring system can reveal, the following improvement cycle is recommended:
+- FAQ-antwoorden: meestal <20 ms  
+- LLM-antwoorden: meestal 400–1500 ms, afhankelijk van de belasting van de Groq API
 
-1. **Weekly:** Review unmatched questions → add top 5 recurring questions to FAQ
-2. **Weekly:** Check feedback ratings → identify low-rated responses → improve FAQ answer or system prompt
-3. **Monthly:** Review average latency trends → optimize if degrading
-4. **Monthly:** Review error logs → fix recurring error patterns
-5. **After updates:** Compare FAQ match rate before/after to validate improvements
+**Drempelwaarde:**  
+Als de gemiddelde responstijd regelmatig boven de 2000 ms komt, kan het nuttig zijn om veelvoorkomende LLM-antwoorden te cachen of de FAQ uit te breiden.
 
 ---
 
-## Accessing Raw Data
+### Foutpercentage
 
-All data is accessible via the PostgreSQL database:
+Een foutpercentage boven 2% moet worden onderzocht. Veel voorkomende oorzaken zijn:
+
+- Groq API-sleutel verlopen of rate-limiting
+- Problemen met de databaseverbinding
+- Ongeldige API-verzoeken
+
+---
+
+### Feedback beoordelingen
+
+Een negatief feedbackpercentage boven 20% kan wijzen op kwaliteitsproblemen. Vergelijk dit met het veld **source** om te bepalen of FAQ-antwoorden of LLM-antwoorden verbeterd moeten worden.
+
+---
+
+## Verbeteracties
+
+Op basis van de informatie uit het monitoringsysteem wordt de volgende verbetercyclus aanbevolen:
+
+1. **Wekelijks:** controleer vragen zonder match → voeg de 5 meest voorkomende vragen toe aan de FAQ  
+2. **Wekelijks:** controleer feedback → verbeter FAQ-antwoorden of de system prompt  
+3. **Maandelijks:** controleer trends in responstijden → optimaliseer indien nodig  
+4. **Maandelijks:** analyseer foutlogs → los terugkerende fouten op  
+5. **Na updates:** vergelijk het FAQ-matchpercentage voor en na de wijziging om verbeteringen te bevestigen
+
+---
+
+## Toegang tot ruwe data
+
+Alle data is toegankelijk via de PostgreSQL-database:
 
 ```bash
-# Connect to the database
+# Verbinden met de database
 docker exec -it production-chatbot-db psql -U app -d app
 
-# Example queries
+# Voorbeeld queries
 SELECT COUNT(*) FROM conversations;
 SELECT role, content, created_at FROM messages ORDER BY created_at DESC LIMIT 20;
 SELECT source, COUNT(*) FROM request_logs GROUP BY source;
 SELECT rating, COUNT(*) FROM feedback GROUP BY rating;
-```
