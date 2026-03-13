@@ -2,6 +2,13 @@
 
 A production-ready AI chatbot for UNASAT (Universiteit van Suriname) students. Answers questions about enrollment, schedules, Microsoft Teams, exams and general campus information — instantly via FAQ matching or intelligently via LLM fallback.
 
+## 🌐 Live Demo
+
+| | URL |
+|---|---|
+| **Chatbot** | https://renewed-recreation-production-a5fa.up.railway.app |
+| **Admin dashboard** | https://renewed-recreation-production-a5fa.up.railway.app/admin |
+
 ---
 
 ## Features
@@ -24,12 +31,12 @@ All project documentation is available in the `/docs` folder:
 
 | Document | Description |
 |---|---|
-| [Architecture](docs/Architectuur_Document.pdf) | System design, components, data flows, cost estimate |
-| [Deployment Plan](docs/Implementatie_Deploymentplan.pdf) | Step-by-step deployment & rollback procedures |
-| [Prompt Engineering](docs/Prompt_Engineering.pdf) | Prompt design, ecosystem analysis, iteration cycles |
-| [Monitoring](docs/monitoring.md) | Metrics, logging setup, improvement cycle |
-| [Security & Privacy](docs/security_privacy.md) | Injection detection, PII redaction, rate limiting, AVG compliance |
-| [User Test Report](docs/user_test_report.md) | Test results, user feedback, resolved issues |
+| [Architecture](docs/Architectuur_Document.docx) | System design, components, data flows, cost estimate |
+| [Deployment Plan](docs/Implementatie_Deploymentplan.docx) | Step-by-step deployment & rollback procedures |
+| [Prompt Engineering](docs/Prompt_Engineering.docx) | Prompt design, ecosystem analysis, iteration cycles |
+| [Monitoring](docs/Monitoring_Documentatie.docx) | Metrics, logging setup, improvement cycle |
+| [Security & Privacy](docs/Security_Documentatie.docx) | Injection detection, PII redaction, rate limiting, AVG compliance |
+| [User Test Report](docs/testing_report.md) | Test results, user feedback, resolved issues |
 
 ---
 
@@ -41,7 +48,8 @@ All project documentation is available in the `/docs` folder:
 | Backend | FastAPI (Python) — port 8000 |
 | Database | PostgreSQL 16 |
 | LLM | Groq API — llama-3.3-70b-versatile |
-| Deployment | Docker Compose |
+| Local deployment | Docker Compose |
+| Production hosting | Railway (auto-deploy on push to `main`) |
 
 ---
 
@@ -70,11 +78,9 @@ The script will check Docker, create your `.env`, ask for your API key and start
 git clone https://github.com/MelvinRitfeld/production-chatbot
 cd production-chatbot
 
-# Create and fill in your environment file
 cp backend/.env.example backend/.env
 # Open backend/.env and set GROQ_API_KEY
 
-# Build and start
 docker compose up --build
 ```
 
@@ -84,12 +90,21 @@ Get a free Groq API key at: https://console.groq.com
 
 ## Access
 
+### Local
 | URL | Description |
 |---|---|
 | http://localhost:3000 | Chatbot interface |
 | http://localhost:3000/admin | Admin dashboard |
 | http://localhost:8000/docs | Backend API docs |
 | http://localhost:8000/health | Health check |
+
+### Production (Railway)
+| URL | Description |
+|---|---|
+| https://renewed-recreation-production-a5fa.up.railway.app | Chatbot interface |
+| https://renewed-recreation-production-a5fa.up.railway.app/admin | Admin dashboard |
+| https://production-chatbot-production-6f5a.up.railway.app/docs | Backend API docs |
+| https://production-chatbot-production-6f5a.up.railway.app/health | Health check |
 
 ---
 
@@ -99,6 +114,7 @@ production-chatbot/
 ├── setup.ps1                  # Automated setup (Windows)
 ├── setup.sh                   # Automated setup (Linux/Mac)
 ├── docker-compose.yml
+├── docs/                      # All project documentation
 ├── backend/
 │   ├── main.py                # FastAPI app entrypoint
 │   ├── .env.example           # Environment template
@@ -167,4 +183,4 @@ Make sure `DATABASE_URL` in `backend/.env` uses `@db:5432` not `@localhost:5432`
 Stop other services on ports 3000, 8000 or 5432, then retry.
 
 **LLM answers are in the wrong language**
-The system prompt instructs the model to match the student's language (Dutch, English or Sranantongo). If responses seem off, check that your GROQ_API_KEY is valid and the backend started correctly.
+The system prompt instructs the model to match the student's language. If responses seem off, check that your GROQ_API_KEY is valid and the backend started correctly.

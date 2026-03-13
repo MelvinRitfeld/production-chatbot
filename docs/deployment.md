@@ -115,3 +115,38 @@ Controleer of `backend/.env` bestaat en of de sleutel is ingesteld. Het bestand 
 
 **Port conflict**
 Stop eventuele services die al gebruik maken van poorten 3000, 8000 of 5432 voordat het systeem wordt gestart.
+
+
+
+## Productie Deployment (Railway)
+
+De applicatie is live gedeployed op Railway en publiek bereikbaar via de volgende URLs:
+
+| Service | URL |
+|---|---|
+| Frontend (chatbot) | https://renewed-recreation-production-a5fa.up.railway.app |
+| Backend (API) | https://production-chatbot-production-6f5a.up.railway.app |
+| Admin dashboard | https://renewed-recreation-production-a5fa.up.railway.app/admin |
+
+### Hoe het werkt
+
+Railway deployt elke service als een aparte container via de individuele Dockerfiles in de repository. 
+Bij elke push naar de `main` branch wordt automatisch een nieuwe deployment getriggerd.
+
+De volgende environment variables zijn ingesteld via het Railway dashboard:
+
+| Service | Variabele | Waarde |
+|---|---|---|
+| Backend | `GROQ_API_KEY` | Groq API sleutel |
+| Backend | `DATABASE_URL` | Railway PostgreSQL connection string |
+| Frontend | `NEXT_PUBLIC_API_BASE_URL` | Backend Railway URL |
+
+### Lokaal vs. Productie
+
+| Aspect | Lokaal (Docker Compose) | Productie (Railway) |
+|---|---|---|
+| Opstarten | `docker compose up --build` | Automatisch via GitHub push |
+| Database | Lokale PostgreSQL container | Railway Managed PostgreSQL |
+| URLs | localhost:3000 / localhost:8000 | Publieke Railway domeinen |
+| HTTPS | Nee | Ja (automatisch) |
+| Kosten | Gratis | ~$5/maand (binnen gratis tier) |

@@ -295,4 +295,4 @@ Tijdens de gebruikerstests zijn 5 problemen geïdentificeerd, waarvan alle 5 zij
 
 ---
 
-*Testverslag opgesteld door het projectteam SOI/ICT — UNASAT, 2025.*
+*Testverslag opgesteld door project X SOI/ICT — UNASAT, 2026.*
