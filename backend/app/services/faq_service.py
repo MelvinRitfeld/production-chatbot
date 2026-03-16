@@ -6,7 +6,7 @@ from app.data.answer_bank import FAQ_ENTRIES
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-# ──  FAQ referentie for the LLM ────────────────────────────────
+# ── FAQ referentie for the LLM ────────────────────────────────
 def _build_faq_context() -> str:
     lines = ["Beschikbare FAQ-antwoorden (gebruik deze als referentie):"]
     for entry in FAQ_ENTRIES:
@@ -20,7 +20,7 @@ FAQ_CONTEXT = _build_faq_context()
 
 SYSTEM_PROMPT = f"""Je bent een behulpzame studentenassistent van UNASAT (Universiteit van Suriname).
 Je helpt studenten met vragen over inschrijving, roosters, toetsen, studiebegeleiding,
-Microsoft Teams, OneDrive, SHL en algemene campusinformatie.
+Microsoft Teams, OneDrive, SHL, BUKU en algemene campusinformatie.
 
 {FAQ_CONTEXT}
 
@@ -31,9 +31,11 @@ Regels:
 - Als je het antwoord niet zeker weet, verwijs naar info@unasat.sr
 - Verzin geen informatie over specifieke data, bedragen of namen
 - Blijf altijd vriendelijk en professioneel
-- Gebruik de gespreksgeschiedenis om context te begrijpen"""
+- Je hebt toegang tot de volledige gespreksgeschiedenis — gebruik die om context te begrijpen
+- Als een student vraagt om een samenvatting van het gesprek, geef die dan gewoon
+- Als een student verwijst naar iets wat eerder in het gesprek is gezegd, gebruik dan de geschiedenis"""
 
-# ── Charcter limit ───────────────────────────────────────────────────────────
+# ── Character limit ───────────────────────────────────────────────────────────
 MAX_INPUT_CHARS = 500
 
 
@@ -50,6 +52,15 @@ class FAQService:
             "dat", "dit", "deze", "die", "daar", "hier", "er",
             "als", "dan", "maar", "ook", "nog", "niet", "wel",
             "tot", "t/m", "om", "via",
+        }
+
+        # Keywords that indicate the student is referring to the conversation itself
+        # — skip FAQ matching and go straight to LLM with full history
+        self.meta_keywords = {
+            "samenvatten", "samenvatting", "vat samen", "eerder", "vorige",
+            "net gezegd", "hierboven", "eerder gevraagd", "ons gesprek",
+            "summarize", "summary", "earlier", "previous", "above",
+            "wat hebben we", "wat heb ik"
         }
 
     # 1) Normalize
@@ -72,7 +83,12 @@ class FAQService:
         tag_overlap = len(user_tokens & tag_set)
         return int(question_overlap + (tag_overlap * 2))
 
-    # 4) Find best FAQ match
+    # 4) Check if the message is about the conversation itself
+    def _is_meta_question(self, user_input: str) -> bool:
+        lower = user_input.lower()
+        return any(kw in lower for kw in self.meta_keywords)
+
+    # 5) Find best FAQ match
     def find_best_match(self, user_input: str) -> Tuple[Optional[Dict[str, Any]], int]:
         normalized_input = self._normalize(user_input)
         user_tokens = self._tokenize(normalized_input)
@@ -104,7 +120,7 @@ class FAQService:
 
         return None, 0
 
-    # 5) Get low-confidence FAQ suggestions (for LLM fallback responses)
+    # 6) Get low-confidence FAQ suggestions (for LLM fallback responses)
     def get_suggestions(self, user_input: str, limit: int = 3) -> List[str]:
         """Returns up to `limit` related FAQ questions with score >= 2 (below main threshold)."""
         normalized_input = self._normalize(user_input)
@@ -127,15 +143,16 @@ class FAQService:
         scored.sort(key=lambda x: x[0], reverse=True)
         return [q for _, q in scored[:limit]]
 
-    # 6) LLM fallback via Groq with conversation history
+    # 7) LLM fallback via Groq with conversation history
     def llm_fallback(self, user_input: str, history: list = None) -> str:
         try:
             messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
             if history:
-                for msg in history[:-1]:
+                for msg in history:
                     role = msg.get("role", "user")
                     content = msg.get("content", "")
+                    # Skip blocked/redacted messages
                     if content.startswith("[BLOCKED") or content == "[PII_REDACTED]":
                         continue
                     if role in ("user", "assistant"):
@@ -146,14 +163,14 @@ class FAQService:
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=messages,
-                max_tokens=500,       # was 200 — raised for fuller answers
+                max_tokens=500,
                 temperature=0.5,
             )
             return response.choices[0].message.content.strip()
         except Exception:
             return "Ik kan je vraag momenteel niet beantwoorden. Neem contact op via info@unasat.sr."
 
-    # 7) Main entry point
+    # 8) Main entry point
     def get_answer(self, user_input: str, history: list = None) -> Tuple[str, str, List[str]]:
         """Returns (answer, source, suggestions)"""
 
@@ -165,6 +182,11 @@ class FAQService:
                 "error",
                 [],
             )
+
+        # If student is asking about the conversation itself, skip FAQ and use LLM with full history
+        if self._is_meta_question(user_input):
+            llm_answer = self.llm_fallback(user_input, history=history)
+            return llm_answer, "llm", []
 
         match, score = self.find_best_match(user_input)
         if match:
